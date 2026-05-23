@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative min-h-[80vh] flex items-center overflow-hidden">
+    <!-- Very subtle background element -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border border-[#f0f0f0] rounded-full opacity-50 pointer-events-none"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-[#e5e5e5] rounded-full opacity-50 pointer-events-none"></div>
+
+    <div class="container mx-auto px-6 max-w-7xl relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="max-w-4xl" data-aos="fade-right">
+                <div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-[#eaeaea] bg-white text-[#555] shadow-sm font-mono text-xs tracking-wider mb-8 uppercase">
+                    <span class="w-1.5 h-1.5 rounded-full bg-black animate-pulse"></span>
+                    Next-Gen Semiconductor Solutions
+                </div>
+            <h1 class="text-6xl md:text-8xl font-heading font-bold mb-6 leading-[1.1] tracking-tight text-black">
+                Advanced<br/>
+                <span class="text-[#888]">Verification.</span>
+            </h1>
+            <p class="text-xl text-muted mb-12 max-w-2xl font-sans font-light leading-relaxed">
+                We empower leading semiconductor companies to achieve first-pass silicon success with premium ASIC Design Verification, specializing in RISC-V, Modem SoCs, and 5G Transceivers.
+            </p>
+            <div class="flex flex-wrap gap-4 font-sans text-sm font-medium" data-aos="fade-up" data-aos-delay="200">
+                <a href="{% url 'contact' %}" class="px-8 py-3.5 bg-black text-white shadow-md rounded hover:bg-gray-800 transition-colors flex items-center gap-2">
+                    Start a Project <span class="font-mono">&rarr;</span>
+                </a>
+                <a href="{% url 'domain_detail' 'riscv' %}" class="px-8 py-3.5 border border-[#eaeaea] text-black bg-white rounded hover:border-black transition-colors shadow-sm">
+                    Explore RISC-V Verification
+                </a>
+            </div>
+        </div>
+        
+        <!-- Hero Image -->
+        <div class="hidden lg:block relative" data-aos="zoom-in" data-aos-delay="100">
+            <div class="absolute inset-0 bg-gradient-to-tr from-gray-100 to-transparent rounded-2xl -z-10 blur-xl"></div>
+            <img src="{% static 'images/hero_chip.png' %}" alt="Macro semiconductor chip" class="w-full max-w-md mx-auto rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-[#eaeaea] object-cover aspect-square hover:scale-105 transition-transform duration-500">
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-20 border-y border-[#eaeaea] bg-[#fafafa]">
+    <div class="container mx-auto px-6 max-w-7xl">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-px bg-[#eaeaea] border border-[#eaeaea] rounded overflow-hidden shadow-sm" data-aos="fade-up">
+            
+            <script>
+                document.addEventListener('alpine:init', () => {
+                    Alpine.data('countUp', (target, durationInSeconds, suffix = '', isFloat = false) => ({
+                        current: isFloat ? '0.0' : '0',
+                        target: target,
+                        suffix: suffix,
+                        init() {
+                            let startTimestamp = null;
+                            const step = (timestamp) => {
+                                if (!startTimestamp) startTimestamp = timestamp;
+                                const progress = Math.min((timestamp - startTimestamp) / (durationInSeconds * 1000), 1);
+                                // Easing out function
+                                const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+                                this.current = isFloat 
+                                    ? (easeOutQuart * this.target).toFixed(1) 
+                                    : Math.floor(easeOutQuart * this.target);
+                                    
+                                if (progress < 1) {
+                                    window.requestAnimationFrame(step);
+                                } else {
+                                    this.current = this.target;
+                                }
+                            };
+                            window.requestAnimationFrame(step);
+                        }
+                    }))
+                })
+            </script>
+
+            <div class="bg-white p-10 text-center" x-data="countUp(99.9, 2, '%', true)">
+                <div class="text-5xl font-heading font-bold text-black mb-2" x-text="current + suffix">99.9%</div>
+                <div class="text-muted font-mono text-xs uppercase tracking-widest font-medium">First-Pass Success</div>
+            </div>
+            <div class="bg-white p-10 text-center" x-data="countUp(50, 2, '+')">
+                <div class="text-5xl font-heading font-bold text-black mb-2" x-text="current + suffix">50+</div>
+                <div class="text-muted font-mono text-xs uppercase tracking-widest font-medium">Tape-outs Completed</div>
+            </div>
+            <div class="bg-white p-10 text-center" x-data="countUp(12, 2, '+')">
+                <div class="text-5xl font-heading font-bold text-black mb-2" x-text="current + suffix">12+</div>
+                <div class="text-muted font-mono text-xs uppercase tracking-widest font-medium">Years Experience</div>
+            </div>
+            <div class="bg-white p-10 text-center" x-data="countUp(24, 2, '/7')">
+                <div class="text-5xl font-heading font-bold text-black mb-2" x-text="current + suffix">24/7</div>
+                <div class="text-muted font-mono text-xs uppercase tracking-widest font-medium">Global Support</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Preview -->
+<section class="py-32 bg-white">
+    <div class="container mx-auto px-6 max-w-7xl">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-20" data-aos="fade-up">
+            <div class="max-w-2xl">
+                <h2 class="text-4xl md:text-5xl font-heading font-bold mb-6 tracking-tight text-black">Core Capabilities</h2>
+                <p class="text-muted text-lg font-light leading-relaxed">Comprehensive engineering solutions across the entire semiconductor product lifecycle, delivered with uncompromising precision.</p>
+            </div>
+            <a href="{% url 'services' %}" class="text-black hover:text-gray-600 font-mono text-sm uppercase font-semibold tracking-wider mt-6 md:mt-0 group flex items-center gap-2 pb-2 border-b border-black hover:border-gray-600 transition-colors">
+                View All Services 
+                <span class="group-hover:translate-x-1 transition-transform">&rarr;</span>
+            </a>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Service 1 -->
+            <a href="{% url 'service_detail' 'asic-verification' %}" class="premium-card p-10 rounded-lg relative group block" data-aos="fade-up" data-aos-delay="100">
+                <div class="mb-8 text-black opacity-80 group-hover:opacity-100 transition-opacity">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                </div>
+                <h3 class="text-xl font-heading font-bold mb-4 text-black">ASIC Verification</h3>
+                <p class="text-muted text-sm mb-6 leading-relaxed">Rigorous functional verification using UVM, SystemVerilog, and Formal methods to ensure zero-defect silicon.</p>
+                <div class="text-sm font-mono font-medium text-black group-hover:underline">Learn More &rarr;</div>
+            </a>
+            
+            <!-- Service 2 -->
+            <a href="{% url 'service_detail' 'rtl-design' %}" class="premium-card p-10 rounded-lg relative group block" data-aos="fade-up" data-aos-delay="200">
+                <div class="mb-8 text-black opacity-80 group-hover:opacity-100 transition-opacity">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                </div>
+                <h3 class="text-xl font-heading font-bold mb-4 text-black">RTL Design</h3>
+                <p class="text-muted text-sm mb-6 leading-relaxed">High-performance, low-power microarchitecture and RTL coding in Verilog/SystemVerilog for complex SoCs.</p>
+                <div class="text-sm font-mono font-medium text-black group-hover:underline">Learn More &rarr;</div>
+            </a>
+            
+            <!-- Service 3 -->
+            <a href="{% url 'service_detail' 'fpga-prototyping' %}" class="premium-card p-10 rounded-lg relative group block" data-aos="fade-up" data-aos-delay="300">
+                <div class="mb-8 text-black opacity-80 group-hover:opacity-100 transition-opacity">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                </div>
+                <h3 class="text-xl font-heading font-bold mb-4 text-black">FPGA Prototyping</h3>
+                <p class="text-muted text-sm mb-6 leading-relaxed">Pre-silicon validation and software development acceleration using cutting-edge FPGA platforms.</p>
+                <div class="text-sm font-mono font-medium text-black group-hover:underline">Learn More &rarr;</div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Client Marquee -->
+<section class="py-20 border-y border-[#eaeaea] overflow-hidden bg-[#fafafa]">
+    <div class="container mx-auto px-6 mb-12 text-center">
+        <p class="text-[#888] font-mono text-xs uppercase font-medium tracking-[0.2em]">Trusted by Industry Leaders</p>
+    </div>
+    <div class="relative flex w-full">
+        <style>
+            @keyframes marquee {
+                0% { transform: translateX(0%); }
+                100% { transform: translateX(-50%); }
+            }
+            .animate-marquee {
+                display: flex;
+                width: 200%;
+                animation: marquee 40s linear infinite;
+            }
+            .client-logo {
+                height: 40px;
+                margin: 0 4rem;
+                transition: all 0.3s ease;
+                object-fit: contain;
+            }
+            .client-logo:hover {
+                transform: scale(1.05);
+            }
+        </style>
+        <div class="animate-marquee items-center justify-around">
+            <img src="{% static 'images/nvidia.png' %}" alt="NVIDIA" class="client-logo">
+            <img src="{% static 'images/qualcomm.png' %}" alt="QUALCOMM" class="client-logo">
+            <img src="{% static 'images/intel.png' %}" alt="INTEL" class="client-logo">
+            <img src="{% static 'images/broadcom.png' %}" alt="BROADCOM" class="client-logo" style="background-color: white; padding: 6px; border-radius: 6px; height: 50px;">
+            <img src="{% static 'images/amd.png' %}" alt="AMD" class="client-logo">
+            <img src="{% static 'images/ti.png' %}" alt="TEXAS INSTRUMENTS" class="client-logo">
+            <img src="{% static 'images/arm.png' %}" alt="ARM" class="client-logo" style="background-color: white; padding: 6px; border-radius: 6px; height: 50px;">
+            
+            <!-- Duplicate for seamless loop -->
+            <img src="{% static 'images/nvidia.png' %}" alt="NVIDIA" class="client-logo">
+            <img src="{% static 'images/qualcomm.png' %}" alt="QUALCOMM" class="client-logo">
+            <img src="{% static 'images/intel.png' %}" alt="INTEL" class="client-logo">
+            <img src="{% static 'images/broadcom.png' %}" alt="BROADCOM" class="client-logo" style="background-color: white; padding: 6px; border-radius: 6px; height: 50px;">
+            <img src="{% static 'images/amd.png' %}" alt="AMD" class="client-logo">
+            <img src="{% static 'images/ti.png' %}" alt="TEXAS INSTRUMENTS" class="client-logo">
+            <img src="{% static 'images/arm.png' %}" alt="ARM" class="client-logo" style="background-color: white; padding: 6px; border-radius: 6px; height: 50px;">
+        </div>
+    </div>
+</section>
+{% endblock %}

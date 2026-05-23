@@ -1,0 +1,353 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* Orbital Animation CSS - Sleek Light Monochrome Edition */
+    .orbital-container {
+        position: relative;
+        width: 100%;
+        max-width: 600px;
+        aspect-ratio: 1/1;
+        margin: 0 auto;
+    }
+    
+    .orbit-ring {
+        position: absolute;
+        top: 10%;
+        left: 10%;
+        width: 80%;
+        height: 80%;
+        border: 1px dashed rgba(0, 0, 0, 0.15);
+        border-radius: 50%;
+        animation: rotate-ring 60s linear infinite;
+        pointer-events: none;
+    }
+
+    @keyframes rotate-ring {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .node-wrapper {
+        position: absolute;
+        pointer-events: none;
+        z-index: 20;
+    }
+
+    .node-content {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        pointer-events: auto;
+    }
+
+    .node-btn {
+        width: 3.5rem;
+        height: 3.5rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #ffffff;
+        border: 1px solid #cccccc;
+        color: #555555;
+        font-family: 'DM Mono', monospace;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .node-btn:hover {
+        border-color: #000;
+        color: #000;
+        transform: scale(1.05);
+    }
+
+    .node-btn.active {
+        background: #000;
+        color: #fff;
+        border-color: #000;
+        font-weight: 600;
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .node-label {
+        position: absolute;
+        top: 100%;
+        margin-top: 0.5rem;
+        white-space: nowrap;
+        font-size: 0.75rem;
+        color: #555;
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 2px 8px;
+        border-radius: 4px;
+        border: 1px solid #eaeaea;
+        pointer-events: none;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .node-content:hover .node-label,
+    .node-btn.active + .node-label {
+        opacity: 1;
+        color: #000;
+    }
+    }
+
+    .connection-lines {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    .detail-enter {
+        animation: fade-in-up 0.4s ease forwards;
+    }
+
+    @keyframes fade-in-up {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<section class="py-24 bg-white" x-data="{ 
+    activeStep: 1, 
+    showModal: false,
+    selectedStep: null,
+    steps: [
+        { 
+            id: 1, 
+            title: 'Strategy', 
+            desc: 'Defining verification strategy based on architecture. Creating Test strategy derived from specifications (like RISC-V).',
+            details: 'During the strategy phase, our senior architects analyze specifications (such as RISC-V ISA extensions or custom protocol specs) to define a robust verification plan. We identify key verification challenges, assess risks, and determine the optimal methodology (e.g. simulation vs formal) to ensure maximum coverage.',
+            deliverables: ['Verification Plan Document', 'Testbench Architecture Specification (TBAS)', 'Resource & Timeline Estimation'],
+            tech: 'SystemVerilog, Word/Confluence, Arch Specs'
+        },
+        { 
+            id: 2, 
+            title: 'Testplan', 
+            desc: 'Testplan development and defining functional coverage goals for the block, cluster, subsystem or SOC level.',
+            details: 'We construct highly detailed testplans mapping features to verification assertions and coverage targets. This includes block-level, cluster-level, subsystem-level, and full-SoC test scenarios. We define functional coverage models (covergroups/coverpoints) to measure progress objectively.',
+            deliverables: ['Feature Map & Traceability Matrix', 'Functional Coverage Model Spec', 'Assertion & Checker Plan'],
+            tech: 'vManager, SystemVerilog Covergroups, XML/Excel'
+        },
+        { 
+            id: 3, 
+            title: 'Environment', 
+            desc: 'Development of full verification testbench & environment components from basics. Driver, monitor, reference model, scoreboard.',
+            details: 'Our engineers build clean, reusable UVM/SystemVerilog environments from scratch. We implement stimulus generators (drivers/sequencers), monitors for protocol checking, scoreboards for data integrity verification, and golden reference models (such as SPIKE for RISC-V) for automatic checking.',
+            deliverables: ['Reusable UVM Environment Package', 'Golden Reference Models (C/C++/SystemC)', 'Interface & Protocol Checkers (SVA)'],
+            tech: 'UVM, SystemVerilog, C++, SPIKE Reference Model'
+        },
+        { 
+            id: 4, 
+            title: 'Sequences', 
+            desc: 'Development of sequence layering, virtual sequences, and testcases using VERA, VMM, OVM, UVM, SystemVerilog.',
+            details: 'We develop complex sequence structures, virtual sequences, and dynamic test scenarios. This includes basic sanity tests, directed tests for edge cases, and highly randomized sequences to find complex hidden bugs. We use SystemVerilog OOP features to maximize code reuse.',
+            deliverables: ['Virtual Sequences & Sequence Library', 'Directed & Constrained-Random Test Suite', 'Base & Extended Test classes'],
+            tech: 'UVM Sequences, SystemVerilog OOP, VERA/VMM legacy support'
+        },
+        { 
+            id: 5, 
+            title: 'Execution', 
+            desc: 'Applying constrained random techniques to find early bugs, along with formal equivalence techniques (Jasper).',
+            details: 'We run simulation runs with constrained random stimulus to hit rare corner cases. For critical control blocks (like arbiter, decoder, interrupt controller), we leverage Formal Verification tools like JasperGold to prove design correctness mathematically and eliminate bugs early.',
+            deliverables: ['Bug Reports & Simulation Waveforms', 'Formal Property Check Result Sheet', 'Coverage Analysis Reports'],
+            tech: 'VCS, Questa, JasperGold, SystemVerilog Assertions (SVA)'
+        },
+        { 
+            id: 6, 
+            title: 'Regressions', 
+            desc: 'Running regressions, bug reporting, and performing Gate Level Simulation (GLS).',
+            details: 'We run massive nightly regressions on grid servers or cloud environments to verify code stability. We perform Gate-Level Simulations (GLS) with SDF (Standard Delay Format) back-annotation to verify timing paths, reset sequences, and asynchronous interfaces.',
+            deliverables: ['Nightly Regression Dashboard & Logs', 'GLS Verification Reports', 'Timing Violation Reports'],
+            tech: 'LSF/Grid Engine, VCS/Xcelium, SDF Back-annotation'
+        },
+        { 
+            id: 7, 
+            title: 'Closure', 
+            desc: 'Achieving complete coverage closure and verifying Register Abstraction Layer based registers.',
+            details: 'We analyze code, branch, toggle, and functional coverage reports. We write exclusion files for unreachable states with robust technical justifications. We integrate and verify UVM RAL (Register Abstraction Layer) models to ensure all internal registers match hardware specifications before sign-off.',
+            deliverables: ['100% Code & Functional Coverage Report', 'RAL Verification Sign-off', 'Final Verification Summary Report (VSR)'],
+            tech: 'UVM RAL, UCDB/vManager, Coverage Merge Tools'
+        }
+    ],
+    init() {
+        this.selectedStep = this.steps[0];
+    }
+}">
+    <div class="container mx-auto px-6 max-w-7xl">
+        <div class="text-center mb-20" data-aos="fade-up">
+            <h1 class="text-5xl md:text-6xl font-heading font-bold mb-6 tracking-tight text-black">Verification <span class="text-[#888]">Methodology</span></h1>
+            <p class="text-muted max-w-2xl mx-auto font-light text-lg">We work on all stages of functional verification. Below is our circular flow from strategy to closure.</p>
+        </div>
+
+        <!-- Desktop/Tablet Orbital UI (Hidden on small screens) -->
+        <div class="hidden md:block mb-24 relative" data-aos="zoom-in" data-aos-delay="200">
+            <div class="orbital-container">
+                <div class="orbit-ring"></div>
+                
+                <!-- SVG connecting arcs between center and nodes -->
+                <svg class="connection-lines" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+                    <template x-for="(step, index) in steps" :key="step.id">
+                        <line x1="50" y1="50" 
+                              :x2="50 + 40 * Math.cos((index * (360/7) - 90) * Math.PI / 180)" 
+                              :y2="50 + 40 * Math.sin((index * (360/7) - 90) * Math.PI / 180)" 
+                              stroke-width="0.4" stroke-dasharray="2,2" 
+                              :stroke="activeStep === step.id ? 'rgba(0, 0, 0, 0.4)' : 'rgba(0, 0, 0, 0.1)'" />
+                    </template>
+                </svg>
+
+                <!-- Center Display Node -->
+                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full border border-[#eaeaea] bg-[#ffffff] z-10 flex flex-col items-center justify-center p-8 text-center shadow-[0_10px_40px_rgba(0,0,0,0.08)] cursor-pointer hover:border-black hover:shadow-[0_12px_45px_rgba(0,0,0,0.12)] transition-all group"
+                     @click="selectedStep = steps.find(s => s.id === activeStep); showModal = true">
+                    <template x-for="step in steps" :key="'center-'+step.id">
+                        <div x-show="activeStep === step.id" class="detail-enter">
+                            <div class="text-[#888] font-mono text-xs mb-2 uppercase font-semibold tracking-widest">Stage <span x-text="step.id"></span></div>
+                            <h3 class="text-xl font-heading font-bold mb-2 text-black group-hover:text-gray-600 transition-colors" x-text="step.title"></h3>
+                            <p class="text-muted text-xs leading-relaxed mb-4 line-clamp-3" x-text="step.desc"></p>
+                            <div class="text-[10px] font-mono font-semibold text-black uppercase tracking-wider border-b border-black inline-block pb-0.5">Click to Expand &rarr;</div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Orbiting Nodes -->
+                <template x-for="(step, index) in steps" :key="'node-'+step.id">
+                    <div class="node-wrapper" 
+                         :style="`left: ${50 + 40 * Math.cos((index * (360/7) - 90) * Math.PI / 180)}%; top: ${50 + 40 * Math.sin((index * (360/7) - 90) * Math.PI / 180)}%; transform: translate(-50%, -50%);`">
+                        <div class="node-content">
+                            <button class="node-btn" 
+                                    :class="{'active': activeStep === step.id}" 
+                                    @click="activeStep = step.id; selectedStep = step; showModal = true"
+                                    x-text="step.id"></button>
+                            <div class="node-label" x-text="step.title"></div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- Mobile Stepper Fallback (Hidden on md and up) -->
+        <div class="md:hidden max-w-xl mx-auto" data-aos="fade-up">
+            <div class="space-y-6 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-[1px] before:bg-[#eaeaea]">
+                <template x-for="step in steps" :key="'mobile-'+step.id">
+                    <div class="relative flex items-start gap-6 group is-active cursor-pointer" @click="activeStep = step.id">
+                        <!-- Icon -->
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border shrink-0 z-10 transition-colors mt-1 shadow-sm"
+                             :class="activeStep === step.id ? 'bg-black border-black text-white' : 'bg-[#fff] border-[#eaeaea] text-[#555]'">
+                            <span class="font-mono text-sm font-medium" x-text="step.id"></span>
+                        </div>
+                        <!-- Card -->
+                        <div class="flex-grow p-6 rounded-lg border transition-all shadow-sm"
+                             :class="activeStep === step.id ? 'border-gray-400 bg-[#fdfdfd]' : 'border-[#eaeaea] bg-[#ffffff]'">
+                            <div class="font-heading font-bold text-lg mb-2 text-black" x-text="step.title"></div>
+                            <div x-show="activeStep === step.id" x-collapse>
+                                <div class="text-sm text-muted leading-relaxed mb-4" x-text="step.desc"></div>
+                                <button @click.stop="selectedStep = step; showModal = true" class="text-xs font-mono font-semibold text-black uppercase tracking-wider border-b border-black pb-0.5">View Full Specs &rarr;</button>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Overlay -->
+    <div x-show="showModal" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center p-4" 
+         style="display: none;"
+         @click.away="showModal = false"
+         @keydown.escape.window="showModal = false">
+         
+        <!-- Modal Container -->
+        <div x-show="showModal"
+             x-transition:enter="transition ease-out duration-300 transform"
+             x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+             x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-200 transform"
+             x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+             x-transition:leave-end="opacity-0 scale-95 translate-y-4"
+             class="bg-white rounded-xl shadow-2xl border border-[#eaeaea] max-w-xl w-full p-8 relative overflow-hidden"
+             @click.stop>
+             
+            <!-- Header -->
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <span class="font-mono text-xs font-semibold text-[#888] uppercase tracking-widest block mb-1" x-text="`Stage 0${selectedStep?.id} of 07`"></span>
+                    <h3 class="text-2xl font-heading font-bold text-black" x-text="selectedStep?.title"></h3>
+                </div>
+                <button @click="showModal = false" class="text-gray-400 hover:text-black transition-colors p-1 rounded-full hover:bg-gray-100">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <!-- Body Content -->
+            <div class="space-y-6 text-left">
+                <!-- Full Details -->
+                <div>
+                    <h4 class="text-xs font-mono font-semibold text-black uppercase tracking-wider mb-2">Detailed Workflow</h4>
+                    <p class="text-muted text-sm leading-relaxed" x-text="selectedStep?.details"></p>
+                </div>
+                
+                <!-- Deliverables -->
+                <div>
+                    <h4 class="text-xs font-mono font-semibold text-black uppercase tracking-wider mb-3">Key Deliverables</h4>
+                    <ul class="space-y-2">
+                        <template x-for="item in selectedStep?.deliverables" :key="item">
+                            <li class="flex items-start gap-2.5 text-sm text-muted">
+                                <svg class="w-4 h-4 text-black shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"></path></svg>
+                                <span x-text="item"></span>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+                
+                <!-- Tech / Tools -->
+                <div class="pt-4 border-t border-[#eaeaea]">
+                    <h4 class="text-xs font-mono font-semibold text-black uppercase tracking-wider mb-1.5">Key Technologies & Standards</h4>
+                    <p class="text-xs text-[#555] font-mono bg-gray-50 px-3 py-2 rounded border border-[#eaeaea] inline-block" x-text="selectedStep?.tech"></p>
+                </div>
+            </div>
+            
+            <!-- Navigation Footer inside Modal -->
+            <div class="mt-8 pt-6 border-t border-[#eaeaea] flex justify-between items-center">
+                <button @click="
+                    let prevId = selectedStep.id - 1;
+                    if (prevId < 1) prevId = 7;
+                    selectedStep = steps.find(s => s.id === prevId);
+                    activeStep = prevId;
+                " class="text-xs font-mono font-semibold text-muted hover:text-black flex items-center gap-1">
+                    &larr; Prev Stage
+                </button>
+                <button @click="
+                    let nextId = selectedStep.id + 1;
+                    if (nextId > 7) nextId = 1;
+                    selectedStep = steps.find(s => s.id === nextId);
+                    activeStep = nextId;
+                " class="text-xs font-mono font-semibold text-black hover:text-gray-600 flex items-center gap-1">
+                    Next Stage &rarr;
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Alpine Collapse Plugin -->
+<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+{% endblock %}

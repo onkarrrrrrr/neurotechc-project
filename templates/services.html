@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="py-24 bg-white">
+    <div class="container mx-auto px-6 max-w-7xl">
+        <h1 class="text-5xl md:text-6xl font-heading font-bold mb-6 text-center tracking-tight text-black" data-aos="fade-up">Our <span class="text-[#888]">Services</span></h1>
+        <p class="text-center text-muted mb-20 max-w-2xl mx-auto text-lg font-light leading-relaxed" data-aos="fade-up" data-aos-delay="100">Comprehensive end-to-end silicon engineering solutions from architecture to signoff, delivered with uncompromising precision.</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            <!-- Service 1 -->
+            <a href="{% url 'service_detail' 'asic-verification' %}" class="premium-card p-10 rounded-lg group block" data-aos="fade-up" data-aos-delay="100">
+                <div class="mb-8 text-black opacity-80 group-hover:opacity-100 transition-opacity">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                </div>
+                <h3 class="text-xl font-heading font-bold mb-4 text-black">ASIC Design Verification</h3>
+                <p class="text-muted text-sm mb-8 leading-relaxed">Comprehensive functional verification at IP, Sub-system, and SoC levels using SystemVerilog, UVM, and Formal Verification.</p>
+                <div class="text-black font-medium text-sm font-mono group-hover:underline">Read full details &rarr;</div>
+            </a>
+
+            <!-- Service 2 -->
+            <a href="{% url 'service_detail' 'rtl-design' %}" class="premium-card p-10 rounded-lg group block" data-aos="fade-up" data-aos-delay="200">
+                <div class="mb-8 text-black opacity-80 group-hover:opacity-100 transition-opacity">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                </div>
+                <h3 class="text-xl font-heading font-bold mb-4 text-black">RTL Design</h3>
+                <p class="text-muted text-sm mb-8 leading-relaxed">Micro-architecture definition and RTL coding in Verilog, SystemVerilog, or VHDL. Focused on high-performance, low-power.</p>
+                <div class="text-black font-medium text-sm font-mono group-hover:underline">Read full details &rarr;</div>
+            </a>
+
+            <!-- Service 3 -->
+            <a href="{% url 'service_detail' 'fpga-prototyping' %}" class="premium-card p-10 rounded-lg group block" data-aos="fade-up" data-aos-delay="300">
+                <div class="mb-8 text-black opacity-80 group-hover:opacity-100 transition-opacity">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                </div>
+                <h3 class="text-xl font-heading font-bold mb-4 text-black">FPGA Prototyping</h3>
+                <p class="text-muted text-sm mb-8 leading-relaxed">Mapping complex ASICs to multi-FPGA platforms. Emulation and prototyping for early software development.</p>
+                <div class="text-black font-medium text-sm font-mono group-hover:underline">Read full details &rarr;</div>
+            </a>
+
+            <!-- Service 4 -->
+            <a href="{% url 'service_detail' 'functional-coverage' %}" class="premium-card p-10 rounded-lg group block" data-aos="fade-up" data-aos-delay="100">
+                <div class="mb-8 text-black opacity-80 group-hover:opacity-100 transition-opacity">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                </div>
+                <h3 class="text-xl font-heading font-bold mb-4 text-black">Functional Coverage</h3>
+                <p class="text-muted text-sm mb-8 leading-relaxed">Developing comprehensive coverage models, assertions, and tracking tools to ensure 100% functional and code coverage closure.</p>
+                <div class="text-black font-medium text-sm font-mono group-hover:underline">Read full details &rarr;</div>
+            </a>
+
+            <!-- Service 5 -->
+            <a href="{% url 'service_detail' 'uvm-testbench' %}" class="premium-card p-10 rounded-lg group block" data-aos="fade-up" data-aos-delay="200">
+                <div class="mb-8 text-black opacity-80 group-hover:opacity-100 transition-opacity">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                </div>
+                <h3 class="text-xl font-heading font-bold mb-4 text-black">UVM Testbench Dev</h3>
+                <p class="text-muted text-sm mb-8 leading-relaxed">Building highly reusable, scalable, and configurable UVM testbenches from scratch. Constrained random generation.</p>
+                <div class="text-black font-medium text-sm font-mono group-hover:underline">Read full details &rarr;</div>
+            </a>
+
+            <!-- Service 6 -->
+            <a href="{% url 'service_detail' 'embedded-systems' %}" class="premium-card p-10 rounded-lg group block" data-aos="fade-up" data-aos-delay="300">
+                <div class="mb-8 text-black opacity-80 group-hover:opacity-100 transition-opacity">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"></path></svg>
+                </div>
+                <h3 class="text-xl font-heading font-bold mb-4 text-black">Embedded Systems</h3>
+                <p class="text-muted text-sm mb-8 leading-relaxed">Firmware development, bootloader design, and driver development for custom ASICs and SoCs.</p>
+                <div class="text-black font-medium text-sm font-mono group-hover:underline">Read full details &rarr;</div>
+            </a>
+
+        </div>
+    </div>
+</section>
+{% endblock %}

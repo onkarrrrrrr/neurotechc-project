@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="py-24 bg-white min-h-[75vh] flex items-center justify-center">
+    <div class="w-full max-w-md mx-auto px-6">
+        
+        <!-- Logo Header -->
+        <div class="text-center mb-8" data-aos="fade-up">
+            <div class="inline-block flex-col items-center group mb-4">
+                <svg width="48" height="48" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-black mb-1 mx-auto">
+                    <rect x="25" y="25" width="50" height="50" rx="6" stroke="currentColor" stroke-width="4"/>
+                    <path d="M25 40h-8 M25 50h-8 M25 60h-8 M75 40h8 M75 50h8 M75 60h8 M40 25v-8 M50 25v-8 M60 25v-8 M40 75v8 M50 75v8 M60 75v8" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+                    <circle cx="17" cy="60" r="3" fill="currentColor"/>
+                    <circle cx="83" cy="40" r="3" fill="currentColor"/>
+                    <circle cx="40" cy="17" r="3" fill="currentColor"/>
+                    <circle cx="60" cy="83" r="3" fill="currentColor"/>
+                    <path d="M48 35 c -8 0, -13 5, -13 12 c 0 4, 3 8, 3 12 c 0 5, -5 8, -3 12 c 2 4, 8 3, 11 1 c 2 -2, 2 -5, 2 -8 c 0 -5, -3 -8, -3 -12 c 0 -3, 3 -8, 3 -17 Z" stroke="currentColor" stroke-width="2" fill="none"/>
+                    <path d="M52 35 c 8 0, 13 5, 13 12 c 0 4, -3 8, -3 12 c 0 5, 5 8, 3 12 c -2 4, -8 3, -11 1 c -2 -2, -2 -5, -2 -8 c 0 -5, 3 -8, 3 -12 c 0 -3, -3 -8, -3 -17 Z" stroke="currentColor" stroke-width="2" fill="none"/>
+                </svg>
+                <span class="font-sans font-semibold tracking-wide text-xl text-black">neurotech</span>
+            </div>
+            <h2 class="text-2xl font-heading font-bold text-black tracking-tight">Admin <span class="text-[#888]">Portal</span></h2>
+            <p class="text-muted text-xs font-mono mt-1 uppercase tracking-wider">Access Restricted to Staff</p>
+        </div>
+
+        <!-- Alert messages -->
+        {% if messages %}
+            <div class="mb-6 space-y-3">
+                {% for message in messages %}
+                    <div class="p-4 rounded-lg text-xs border flex items-center gap-3 shadow-sm {% if message.tags == 'error' %}bg-red-50 border-red-200 text-red-800{% else %}bg-green-50 border-green-200 text-green-800{% endif %}">
+                        {% if message.tags == 'error' %}
+                            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        {% else %}
+                            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        {% endif %}
+                        <span class="font-medium">{{ message }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Form Card -->
+        <div class="premium-card p-8 md:p-10 rounded-xl bg-[#fafafa]" data-aos="fade-up" data-aos-delay="100">
+            <form method="POST" action="{% url 'admin_login' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" class="space-y-6">
+                {% csrf_token %}
+                
+                <div>
+                    <label class="block text-xs font-mono text-[#555] font-semibold uppercase tracking-wider mb-2.5">Username</label>
+                    <input type="text" name="username" required class="w-full bg-white border border-[#d1d5db] rounded-lg px-4 py-3 text-sm text-black focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all shadow-sm" placeholder="Username">
+                </div>
+                
+                <div>
+                    <label class="block text-xs font-mono text-[#555] font-semibold uppercase tracking-wider mb-2.5">Password</label>
+                    <input type="password" name="password" required class="w-full bg-white border border-[#d1d5db] rounded-lg px-4 py-3 text-sm text-black focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all shadow-sm" placeholder="••••••••">
+                </div>
+
+                <button type="submit" class="w-full py-4 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors shadow-md text-sm">
+                    Access Dashboard &rarr;
+                </button>
+            </form>
+        </div>
+        
+    </div>
+</section>
+{% endblock %}

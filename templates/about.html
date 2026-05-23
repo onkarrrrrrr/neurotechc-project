@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="py-24 bg-white">
+    <div class="container mx-auto px-6 max-w-7xl">
+        <div class="text-center mb-24" data-aos="fade-up">
+            <h1 class="text-5xl md:text-7xl font-heading font-bold mb-6 tracking-tight text-black">About <span class="text-[#888]">Us</span></h1>
+            <p class="text-muted max-w-3xl mx-auto font-sans text-xl font-light leading-relaxed">
+                Led by Director <strong>Shailesh Vasekar</strong>, our team brings deep knowledge in functional verification using advance verification methodologies such as VERA, VMM, OVM, UVM, and SystemVerilog.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center mb-32">
+            <div data-aos="fade-right">
+                <h2 class="text-3xl md:text-4xl font-heading font-bold mb-8 text-black">Full-Cycle Verification</h2>
+                <ul class="space-y-4 text-muted font-light leading-relaxed text-lg">
+                    <li class="flex items-start gap-3">
+                        <span class="text-black mt-1">•</span>
+                        We have Worked on all stages of functional verification from defining verification strategy, testplan development, defining functional coverage goals.
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="text-black mt-1">•</span>
+                        Development of full verification testbench & environment components like driver, monitor, reference model, scoreboard, sequences, testscases.
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="text-black mt-1">•</span>
+                        Bug reporting, regression runs and coverage closure.
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="text-black mt-1">•</span>
+                        Block level, cluster or subsystem level and SOC level verification.
+                    </li>
+                </ul>
+            </div>
+            <div class="premium-card p-12 rounded-lg relative border-l-4 border-l-black shadow-md" data-aos="fade-left" data-aos-delay="200">
+                <div class="font-heading text-2xl text-black mb-4 tracking-tight font-bold">Advanced Methodologies</div>
+                <ul class="space-y-2 text-md text-muted font-light">
+                    <li>• Developing testbench from basics.</li>
+                    <li>• Sequence layering, virtual sequences.</li>
+                    <li>• Register Abstraction Layer based register verification.</li>
+                    <li>• Applied constrained random techniques to find early bugs.</li>
+                    <li>• Exposure to formal equivalence technique of Jasper.</li>
+                    <li>• Worked on GLS.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

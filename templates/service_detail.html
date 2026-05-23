@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="py-24 bg-white relative">
+    <!-- Subtle Background Element -->
+    <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-[#f8f9fa] rounded-full -translate-y-1/2 translate-x-1/3 opacity-70 pointer-events-none"></div>
+
+    <div class="container mx-auto px-6 max-w-7xl relative z-10">
+        
+        <div class="mb-12">
+            <a href="{% url 'services' %}" class="inline-flex items-center text-[#555] hover:text-black font-mono text-sm uppercase tracking-wider transition-colors">
+                &larr; Back to Services
+            </a>
+        </div>
+
+        {% if slug == 'asic-verification' %}
+            <div class="max-w-4xl" data-aos="fade-up">
+                <div class="inline-block px-3 py-1 mb-6 border border-[#eaeaea] rounded text-xs font-mono font-medium text-[#555] uppercase tracking-widest bg-white shadow-sm">Core Service</div>
+                <h1 class="text-5xl md:text-7xl font-heading font-bold mb-8 text-black tracking-tight">ASIC Design <span class="text-[#888]">Verification</span></h1>
+                <p class="text-xl text-[#555] font-light leading-relaxed mb-16">
+                    Achieving first-pass silicon success requires rigorous, uncompromising verification. We deploy advanced methodologies to expose critical corner-case bugs before tape-out, saving millions in potential re-spin costs.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 border-t border-[#eaeaea] pt-16">
+                <div class="md:col-span-2 prose prose-lg prose-headings:font-heading prose-headings:font-bold prose-a:text-black text-[#444] font-light" data-aos="fade-right">
+                    <h2>Unmatched Verification <span class="text-[#888]">Rigor</span></h2>
+                    <p>At neurotech, our ASIC Design Verification team treats every project with mission-critical importance. We build highly scalable, constrained-random verification environments utilizing the Universal Verification Methodology (UVM) and SystemVerilog. Our approach ensures that every possible state, interaction, and corner case is thoroughly exercised.</p>
+                    
+                    <h3>Our Capabilities</h3>
+                    <ul>
+                        <li><strong>IP-Level Verification:</strong> Creating standalone testbenches for complex standard IPs (PCIe, Ethernet, DDR, CXL) and custom logic blocks.</li>
+                        <li><strong>Sub-System Verification:</strong> Verifying the complex interactions between multiple IPs, DMA controllers, and memory sub-systems.</li>
+                        <li><strong>SoC-Level Verification:</strong> Full-chip integration testing, boot ROM sequence validation, and hardware-software co-verification using C/C++ tests running on embedded processors (ARM, RISC-V).</li>
+                        <li><strong>Formal Verification:</strong> Deploying mathematical proofs using tools like JasperGold to mathematically guarantee the absence of deadlocks, livelocks, and protocol violations.</li>
+                        <li><strong>Gate-Level Simulation (GLS):</strong> Running SDF-annotated netlist simulations to verify timing and power-aware logic (UPF).</li>
+                    </ul>
+                </div>
+                <div data-aos="fade-left">
+                    <div class="premium-card p-8 rounded-lg sticky top-32 bg-[#fafafa]">
+                        <h3 class="text-xl font-heading font-bold mb-4 text-black">Ready to verify your next chip?</h3>
+                        <p class="text-[#555] text-sm mb-8 leading-relaxed">Schedule a technical deep dive with our verification leads.</p>
+                        <a href="{% url 'contact' %}?service=DV" class="block w-full py-3 text-center bg-black text-white font-semibold rounded hover:bg-gray-800 transition-colors shadow-sm">Request Consultation</a>
+                    </div>
+                </div>
+            </div>
+
+        {% elif slug == 'rtl-design' %}
+            <!-- RTL Design Content -->
+            <div class="max-w-4xl" data-aos="fade-up">
+                <div class="inline-block px-3 py-1 mb-6 border border-[#eaeaea] rounded text-xs font-mono font-medium text-[#555] uppercase tracking-widest bg-white shadow-sm">Core Service</div>
+                <h1 class="text-5xl md:text-7xl font-heading font-bold mb-8 text-black tracking-tight">RTL <span class="text-[#888]">Design</span></h1>
+                <p class="text-xl text-[#555] font-light leading-relaxed mb-16">
+                    From high-level architectural specifications to optimized, synthesizable Verilog. We architect custom silicon solutions prioritized for maximum performance, minimal power consumption, and optimal area (PPA).
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 border-t border-[#eaeaea] pt-16">
+                <div class="md:col-span-2 prose prose-lg prose-headings:font-heading prose-headings:font-bold prose-a:text-black text-[#444] font-light" data-aos="fade-right">
+                    <h2>Precision Engineering at the <span class="text-[#888]">Register Level</span></h2>
+                    <p>Our RTL design methodology focuses on creating highly maintainable, synchronous, and modular code. We are experts in translating complex algorithms and data-flow requirements into highly efficient micro-architectures.</p>
+                    <h3>Our Capabilities</h3>
+                    <ul>
+                        <li><strong>Micro-Architecture Definition:</strong> Creating detailed specifications, block diagrams, and state machine designs prior to coding.</li>
+                        <li><strong>Digital Logic Design:</strong> Writing clean, Lint-free, and CDC-safe Verilog/SystemVerilog RTL.</li>
+                        <li><strong>Power Optimization:</strong> Implementing advanced low-power techniques including clock gating, power domain isolation, and multi-VT synthesis strategies.</li>
+                        <li><strong>High-Speed Interfaces:</strong> Designing custom controllers and physical layer interfaces for high-speed serial protocols.</li>
+                    </ul>
+                </div>
+                <div data-aos="fade-left">
+                    <div class="premium-card p-8 rounded-lg sticky top-32 bg-[#fafafa]">
+                        <h3 class="text-xl font-heading font-bold mb-4 text-black">Need RTL expertise?</h3>
+                        <p class="text-[#555] text-sm mb-8 leading-relaxed">Discuss your architectural requirements with our design team.</p>
+                        <a href="{% url 'contact' %}?service=RTL" class="block w-full py-3 text-center bg-black text-white font-semibold rounded hover:bg-gray-800 transition-colors shadow-sm">Request Consultation</a>
+                    </div>
+                </div>
+            </div>
+
+        {% elif slug == 'fpga-prototyping' %}
+            <!-- FPGA Content -->
+            <div class="max-w-4xl" data-aos="fade-up">
+                <div class="inline-block px-3 py-1 mb-6 border border-[#eaeaea] rounded text-xs font-mono font-medium text-[#555] uppercase tracking-widest bg-white shadow-sm">Hardware Service</div>
+                <h1 class="text-5xl md:text-7xl font-heading font-bold mb-8 text-black tracking-tight">FPGA <span class="text-[#888]">Prototyping</span></h1>
+                <p class="text-xl text-[#555] font-light leading-relaxed mb-16">
+                    Accelerate software development and perform at-speed hardware validation. We map complex, multi-million gate ASIC designs onto enterprise FPGA platforms.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 border-t border-[#eaeaea] pt-16">
+                <div class="md:col-span-2 prose prose-lg prose-headings:font-heading prose-headings:font-bold prose-a:text-black text-[#444] font-light" data-aos="fade-right">
+                    <h2>Bridging the Gap to <span class="text-[#888]">First Silicon</span></h2>
+                    <p>FPGA prototyping is critical for "shift-left" strategies, allowing software and firmware teams to begin development months before the actual silicon arrives. Our team specializes in the complex task of partitioning massive SoC designs across multiple FPGAs.</p>
+                    <h3>Our Capabilities</h3>
+                    <ul>
+                        <li><strong>Design Partitioning:</strong> Utilizing tools like Synopsys HAPS or Cadence Protium to intelligently partition designs while resolving pin-multiplexing bottlenecks.</li>
+                        <li><strong>Memory Modeling:</strong> Replacing ASIC-specific SRAM macros with FPGA block RAM equivalents.</li>
+                        <li><strong>Clock Domain Crossing (CDC):</strong> Handling complex clock tree synthesis modifications required for FPGA environments.</li>
+                        <li><strong>System Bring-Up:</strong> Providing fully functional bitstreams and assisting in laboratory bring-up and debugging.</li>
+                    </ul>
+                </div>
+                <div data-aos="fade-left">
+                    <div class="premium-card p-8 rounded-lg sticky top-32 bg-[#fafafa]">
+                        <h3 class="text-xl font-heading font-bold mb-4 text-black">Accelerate your schedule</h3>
+                        <p class="text-[#555] text-sm mb-8 leading-relaxed">Let us handle the complexity of FPGA mapping.</p>
+                        <a href="{% url 'contact' %}?service=FPGA" class="block w-full py-3 text-center bg-black text-white font-semibold rounded hover:bg-gray-800 transition-colors shadow-sm">Request Consultation</a>
+                    </div>
+                </div>
+            </div>
+
+        {% elif slug == 'functional-coverage' %}
+             <!-- Coverage Content -->
+             <div class="max-w-4xl" data-aos="fade-up">
+                <div class="inline-block px-3 py-1 mb-6 border border-[#eaeaea] rounded text-xs font-mono font-medium text-[#555] uppercase tracking-widest bg-white shadow-sm">Specialty Service</div>
+                <h1 class="text-5xl md:text-7xl font-heading font-bold mb-8 text-black tracking-tight">Functional <span class="text-[#888]">Coverage</span></h1>
+                <p class="text-xl text-[#555] font-light leading-relaxed mb-16">
+                    Verification is only as good as what you measure. We develop highly targeted functional coverage models to mathematically prove that the test plan has been fully executed.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 border-t border-[#eaeaea] pt-16">
+                <div class="md:col-span-2 prose prose-lg prose-headings:font-heading prose-headings:font-bold prose-a:text-black text-[#444] font-light" data-aos="fade-right">
+                    <h2>Closing the Loop on <span class="text-[#888]">Quality</span></h2>
+                    <p>Running millions of random simulations means nothing if you don't know what features were actually tested. Our coverage-driven verification (CDV) methodology relies on robust covergroups and SystemVerilog Assertions (SVA).</p>
+                    <h3>Our Capabilities</h3>
+                    <ul>
+                        <li><strong>Test Plan Mapping:</strong> Directly linking vPlan (Verification Plan) features to specific coverpoints and cross-coverage models.</li>
+                        <li><strong>SVA Development:</strong> Writing concurrent assertions to monitor complex temporal relationships and protocol compliance.</li>
+                        <li><strong>Coverage Closure:</strong> Analyzing coverage databases (UCDB), identifying holes, writing intelligent directed tests, and documenting valid exclusions to reach the 100% sign-off metric.</li>
+                    </ul>
+                </div>
+                <div data-aos="fade-left">
+                    <div class="premium-card p-8 rounded-lg sticky top-32 bg-[#fafafa]">
+                        <h3 class="text-xl font-heading font-bold mb-4 text-black">Stuck at 95% coverage?</h3>
+                        <p class="text-[#555] text-sm mb-8 leading-relaxed">We can help you close the remaining gaps for tape-out.</p>
+                        <a href="{% url 'contact' %}?service=COVERAGE" class="block w-full py-3 text-center bg-black text-white font-semibold rounded hover:bg-gray-800 transition-colors shadow-sm">Request Consultation</a>
+                    </div>
+                </div>
+            </div>
+
+        {% elif slug == 'uvm-testbench' %}
+             <!-- UVM Content -->
+             <div class="max-w-4xl" data-aos="fade-up">
+                <div class="inline-block px-3 py-1 mb-6 border border-[#eaeaea] rounded text-xs font-mono font-medium text-[#555] uppercase tracking-widest bg-white shadow-sm">Specialty Service</div>
+                <h1 class="text-5xl md:text-7xl font-heading font-bold mb-8 text-black tracking-tight">UVM Testbench <span class="text-[#888]">Dev</span></h1>
+                <p class="text-xl text-[#555] font-light leading-relaxed mb-16">
+                    We architect highly modular, scalable, and reusable testbenches utilizing the industry-standard Universal Verification Methodology.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 border-t border-[#eaeaea] pt-16">
+                <div class="md:col-span-2 prose prose-lg prose-headings:font-heading prose-headings:font-bold prose-a:text-black text-[#444] font-light" data-aos="fade-right">
+                    <h2>Building the Foundation of <span class="text-[#888]">Verification</span></h2>
+                    <p>A poorly architected testbench leads to false passes, difficult debugging, and unmaintainable code. We build UVM architectures that scale seamlessly from block-level up to the full SoC.</p>
+                    <h3>Our Capabilities</h3>
+                    <ul>
+                        <li><strong>Agent Development:</strong> Creating robust active and passive agents with highly configurable sequencers, drivers, and monitors.</li>
+                        <li><strong>Reference Models:</strong> Writing cycle-accurate or transaction-level C/C++ or SystemVerilog reference models to feed scoreboards.</li>
+                        <li><strong>Register Abstraction Layer (RAL):</strong> Integrating UVM RAL models for automated CSR (Control and Status Register) testing.</li>
+                        <li><strong>Vertical Reuse:</strong> Designing environments where block-level agents and sequences can be reused at the sub-system and SoC levels without modification.</li>
+                    </ul>
+                </div>
+                <div data-aos="fade-left">
+                    <div class="premium-card p-8 rounded-lg sticky top-32 bg-[#fafafa]">
+                        <h3 class="text-xl font-heading font-bold mb-4 text-black">Need a solid foundation?</h3>
+                        <p class="text-[#555] text-sm mb-8 leading-relaxed">Let us architect your UVM environment from scratch.</p>
+                        <a href="{% url 'contact' %}?service=UVM" class="block w-full py-3 text-center bg-black text-white font-semibold rounded hover:bg-gray-800 transition-colors shadow-sm">Request Consultation</a>
+                    </div>
+                </div>
+            </div>
+
+        {% elif slug == 'embedded-systems' %}
+             <!-- Embedded Content -->
+             <div class="max-w-4xl" data-aos="fade-up">
+                <div class="inline-block px-3 py-1 mb-6 border border-[#eaeaea] rounded text-xs font-mono font-medium text-[#555] uppercase tracking-widest bg-white shadow-sm">Software Service</div>
+                <h1 class="text-5xl md:text-7xl font-heading font-bold mb-8 text-black tracking-tight">Embedded <span class="text-[#888]">Systems</span></h1>
+                <p class="text-xl text-[#555] font-light leading-relaxed mb-16">
+                    Hardware is useless without the software to drive it. We provide low-level firmware and bare-metal software development to bring your custom silicon to life.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 border-t border-[#eaeaea] pt-16">
+                <div class="md:col-span-2 prose prose-lg prose-headings:font-heading prose-headings:font-bold prose-a:text-black text-[#444] font-light" data-aos="fade-right">
+                    <h2>Hardware-Software <span class="text-[#888]">Co-Design</span></h2>
+                    <p>Our unique advantage is our deep understanding of the underlying RTL. Our firmware engineers work closely with the hardware teams to write software that perfectly exercises the hardware architecture.</p>
+                    <h3>Our Capabilities</h3>
+                    <ul>
+                        <li><strong>Boot ROM & Bootloaders:</strong> Developing secure boot sequences and initial hardware configuration for custom ASICs.</li>
+                        <li><strong>Bare-Metal Drivers:</strong> Writing highly optimized C/C++ drivers for custom IP blocks, DMAs, and peripherals.</li>
+                        <li><strong>Pre-Silicon Software:</strong> Developing software on emulators (Palladium) and FPGA prototypes before the chip is fabricated.</li>
+                        <li><strong>Diagnostic Suites:</strong> Creating comprehensive manufacturing test suites to validate fabricated silicon in the lab.</li>
+                    </ul>
+                </div>
+                <div data-aos="fade-left">
+                    <div class="premium-card p-8 rounded-lg sticky top-32 bg-[#fafafa]">
+                        <h3 class="text-xl font-heading font-bold mb-4 text-black">Bring your silicon to life</h3>
+                        <p class="text-[#555] text-sm mb-8 leading-relaxed">Our firmware engineers bridge the gap between hardware and software.</p>
+                        <a href="{% url 'contact' %}?service=EMBEDDED" class="block w-full py-3 text-center bg-black text-white font-semibold rounded hover:bg-gray-800 transition-colors shadow-sm">Request Consultation</a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <!-- Fallback -->
+            <div class="text-center py-20">
+                <h1 class="text-4xl font-heading font-bold mb-4 text-black">Service Not Found</h1>
+                <p class="text-[#555]">The requested service could not be located.</p>
+                <a href="{% url 'services' %}" class="inline-block mt-8 px-6 py-2 bg-black text-white rounded">View All Services</a>
+            </div>
+        {% endif %}
+
+    </div>
+</section>
+{% endblock %}
