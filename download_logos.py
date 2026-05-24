@@ -5,13 +5,10 @@ import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 
 logos = {
-    'nvidia': 'https://logo.clearbit.com/nvidia.com',
-    'qualcomm': 'https://logo.clearbit.com/qualcomm.com',
-    'intel': 'https://logo.clearbit.com/intel.com',
-    'broadcom': 'https://logo.clearbit.com/broadcom.com',
-    'amd': 'https://logo.clearbit.com/amd.com',
-    'ti': 'https://logo.clearbit.com/ti.com',
-    'arm': 'https://logo.clearbit.com/arm.com'
+    'arm': 'https://logo.clearbit.com/arm.com',
+    'synopsys': 'https://logo.clearbit.com/synopsys.com',
+    'rambus': 'https://logo.clearbit.com/rambus.com',
+    'mips': 'https://logo.clearbit.com/mips.com'
 }
 
 os.makedirs('static/images', exist_ok=True)
