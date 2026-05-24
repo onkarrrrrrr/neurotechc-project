@@ -1,0 +1,11 @@
+{
+  "name": "neurotechc",
+  "version": "1.0.0",
+  "description": "NeuroTech Design Verification Platform",
+  "scripts": {
+    "build": "python manage.py collectstatic --noinput && python manage.py migrate --noinput"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
