@@ -1,15 +1,25 @@
 {
   "version": 2,
-  "buildCommand": "python manage.py collectstatic --noinput",
   "builds": [
     {
       "src": "api/index.py",
       "use": "@vercel/python"
+    },
+    {
+      "src": "build_files.sh",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "staticfiles"
+      }
     }
   ],
   "routes": [
     {
-      "src": "(.*)",
+      "src": "/static/(.*)",
+      "dest": "/$1"
+    },
+    {
+      "src": "/(.*)",
       "dest": "api/index.py"
     }
   ]
