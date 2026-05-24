@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth" x-data="{ darkMode: localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches) }" :class="{ 'dark': darkMode }" x-init="$watch('darkMode', val => localStorage.setItem('theme', val ? 'dark' : 'light'))">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,6 +31,7 @@
     
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -78,12 +79,26 @@
         
         /* Subtle grid pattern for light theme */
         .grid-bg {
-            background-image: linear-gradient(#f0f0f0 1px, transparent 1px), linear-gradient(90deg, #f0f0f0 1px, transparent 1px);
+            background-image: linear-gradient(var(--tw-colors-border) 1px, transparent 1px), linear-gradient(90deg, var(--tw-colors-border) 1px, transparent 1px);
             background-size: 50px 50px;
+        }
+        
+        /* Dark mode specific glassmorphism */
+        .dark .glass-card-dark {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dark .navbar-scrolled {
+            background: rgba(10, 10, 10, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
     </style>
 </head>
-<body class="font-sans antialiased min-h-screen flex flex-col relative overflow-x-hidden selection:bg-black selection:text-white grid-bg">
+<body class="font-sans antialiased min-h-screen flex flex-col relative overflow-x-hidden selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black transition-colors duration-300 dark:bg-[#0a0a0a] dark:text-gray-200">
 
     <!-- Header -->
     <nav x-data="{ scrolled: false, mobileMenuOpen: false }" 
@@ -93,31 +108,18 @@
         <div class="container mx-auto px-6 max-w-7xl flex items-center justify-between">
             
             <!-- Logo -->
-            <a href="{% url 'home' %}" class="flex flex-col items-center group">
-                <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-black mb-1">
-                    <!-- Chip outline -->
-                    <rect x="25" y="25" width="50" height="50" rx="6" stroke="currentColor" stroke-width="4"/>
-                    <!-- Pins -->
-                    <path d="M25 40h-8 M25 50h-8 M25 60h-8 M75 40h8 M75 50h8 M75 60h8 M40 25v-8 M50 25v-8 M60 25v-8 M40 75v8 M50 75v8 M60 75v8" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
-                    <circle cx="17" cy="60" r="3" fill="currentColor"/>
-                    <circle cx="83" cy="40" r="3" fill="currentColor"/>
-                    <circle cx="40" cy="17" r="3" fill="currentColor"/>
-                    <circle cx="60" cy="83" r="3" fill="currentColor"/>
-                    <!-- Brain left half -->
-                    <path d="M48 35 c -8 0, -13 5, -13 12 c 0 4, 3 8, 3 12 c 0 5, -5 8, -3 12 c 2 4, 8 3, 11 1 c 2 -2, 2 -5, 2 -8 c 0 -5, -3 -8, -3 -12 c 0 -3, 3 -8, 3 -17 Z" stroke="currentColor" stroke-width="2" fill="none"/>
-                    <!-- Brain right half -->
-                    <path d="M52 35 c 8 0, 13 5, 13 12 c 0 4, -3 8, -3 12 c 0 5, 5 8, 3 12 c -2 4, -8 3, -11 1 c -2 -2, -2 -5, -2 -8 c 0 -5, 3 -8, 3 -12 c 0 -3, -3 -8, -3 -17 Z" stroke="currentColor" stroke-width="2" fill="none"/>
-                </svg>
-                <span class="font-sans font-semibold tracking-wide text-lg text-black">neurotech</span>
+            <a href="{% url 'home' %}" class="flex items-center group">
+                <!-- White logo for dark mode, black for light mode -->
+                <img src="{% static 'images/logo.png' %}" alt="Neurotech Logo" class="h-14 w-auto dark:invert transition-all duration-300">
             </a>
             
             <!-- Desktop Menu -->
             <div class="hidden md:flex items-center gap-8 font-sans text-sm font-medium">
-                <a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}text-black after:w-full{% else %}text-muted hover:text-black after:w-0{% endif %} transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:bg-black after:transition-all hover:after:w-full">Home</a>
+                <a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}text-black dark:text-white after:w-full{% else %}text-muted dark:text-gray-400 hover:text-black dark:hover:text-white after:w-0{% endif %} transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:bg-black dark:after:bg-white after:transition-all hover:after:w-full">Home</a>
                 
                 <!-- Domain Dropdown -->
                 <div x-data="{ open: false }" class="relative" @mouseenter="open = true" @mouseleave="open = false">
-                    <button class="{% if request.resolver_match.url_name == 'domain_detail' %}text-black after:w-full{% else %}text-muted hover:text-black after:w-0{% endif %} transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:bg-black after:transition-all hover:after:w-full flex items-center gap-1 focus:outline-none">
+                    <button class="{% if request.resolver_match.url_name == 'domain_detail' %}text-black dark:text-white after:w-full{% else %}text-muted dark:text-gray-400 hover:text-black dark:hover:text-white after:w-0{% endif %} transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:bg-black dark:after:bg-white after:transition-all hover:after:w-full flex items-center gap-1 focus:outline-none">
                         Domain
                         <svg class="w-4 h-4 transition-transform duration-200" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
@@ -129,25 +131,59 @@
                          x-transition:leave="transition ease-in duration-75" 
                          x-transition:leave-start="transform opacity-100 scale-100" 
                          x-transition:leave-end="transform opacity-0 scale-95" 
-                         class="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none" style="display: none;">
+                         class="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-900 ring-1 ring-black dark:ring-white ring-opacity-5 dark:ring-opacity-10 divide-y divide-gray-100 dark:divide-gray-800 focus:outline-none" style="display: none;">
                         <div class="py-1">
-                            <a href="{% url 'domain_detail' 'riscv' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-black">RISC-V</a>
-                            <a href="{% url 'domain_detail' 'otn' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-black">OTN</a>
-                            <a href="{% url 'domain_detail' 'amba' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-black">AMBA</a>
-                            <a href="{% url 'domain_detail' 'aerosac' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-black">AEROSAC</a>
+                            <a href="{% url 'domain_detail' 'riscv' %}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white">RISC-V</a>
+                            <a href="{% url 'domain_detail' 'otn' %}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white">OTN</a>
+                            <a href="{% url 'domain_detail' 'amba' %}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white">AMBA</a>
+                            <a href="{% url 'domain_detail' 'aerosac' %}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white">AEROSAC</a>
                         </div>
                     </div>
                 </div>
 
-                <a href="{% url 'services' %}" class="{% if request.resolver_match.url_name == 'services' or request.resolver_match.url_name == 'service_detail' %}text-black after:w-full{% else %}text-muted hover:text-black after:w-0{% endif %} transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:bg-black after:transition-all hover:after:w-full">Services</a>
+                <!-- Services Dropdown -->
+                <div x-data="{ open: false }" class="relative" @mouseenter="open = true" @mouseleave="open = false">
+                    <button class="{% if request.resolver_match.url_name == 'services' or request.resolver_match.url_name == 'service_detail' %}text-black dark:text-white after:w-full{% else %}text-muted dark:text-gray-400 hover:text-black dark:hover:text-white after:w-0{% endif %} transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:bg-black dark:after:bg-white after:transition-all hover:after:w-full flex items-center gap-1 focus:outline-none">
+                        Services
+                        <svg class="w-4 h-4 transition-transform duration-200" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <!-- Dropdown Menu -->
+                    <div x-show="open" 
+                         x-transition:enter="transition ease-out duration-100" 
+                         x-transition:enter-start="transform opacity-0 scale-95" 
+                         x-transition:enter-end="transform opacity-100 scale-100" 
+                         x-transition:leave="transition ease-in duration-75" 
+                         x-transition:leave-start="transform opacity-100 scale-100" 
+                         x-transition:leave-end="transform opacity-0 scale-95" 
+                         class="absolute left-0 mt-2 w-72 rounded-md shadow-lg bg-white dark:bg-gray-900 ring-1 ring-black dark:ring-white ring-opacity-5 dark:ring-opacity-10 divide-y divide-gray-100 dark:divide-gray-800 focus:outline-none font-sans" style="display: none;">
+                        <div class="py-1">
+                            <a href="{% url 'service_detail' 'asic-verification' %}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white font-semibold">IP, Subsystem, SOC Verification</a>
+                            <a href="{% url 'service_detail' 'asic-verification' %}#arm-soc" class="block px-6 py-1.5 text-xs text-gray-900 dark:text-gray-100 font-bold hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white uppercase tracking-wider">&bull; ARM SOC Verification</a>
+                            <a href="{% url 'service_detail' 'rtl-design' %}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white">RTL Design</a>
+                            <a href="{% url 'service_detail' 'fpga-prototyping' %}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white">FPGA Prototyping</a>
+                            <a href="{% url 'service_detail' 'functional-coverage' %}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white font-normal">Functional Coverage</a>
+                            <a href="{% url 'service_detail' 'uvm-testbench' %}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white">UVM Testbench Dev</a>
+                            <div class="border-t border-[#eaeaea] dark:border-gray-700 my-1"></div>
+                            <a href="{% url 'services' %}" class="block px-4 py-2 text-xs text-[#888] dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white font-mono uppercase tracking-wider font-semibold">All Services &rarr;</a>
+                        </div>
+                    </div>
+                </div>
                 
-                <a href="{% url 'methodology' %}" class="{% if request.resolver_match.url_name == 'methodology' %}text-black after:w-full{% else %}text-muted hover:text-black after:w-0{% endif %} transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:bg-black after:transition-all hover:after:w-full">Methodology</a>
+                <a href="{% url 'methodology' %}" class="{% if request.resolver_match.url_name == 'methodology' %}text-black dark:text-white after:w-full{% else %}text-muted dark:text-gray-400 hover:text-black dark:hover:text-white after:w-0{% endif %} transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:bg-black dark:after:bg-white after:transition-all hover:after:w-full">Methodology</a>
                 
-                <a href="{% url 'product' %}" class="{% if request.resolver_match.url_name == 'product' %}text-black after:w-full{% else %}text-muted hover:text-black after:w-0{% endif %} transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:bg-black after:transition-all hover:after:w-full">Product</a>
+                <a href="{% url 'product' %}" class="{% if request.resolver_match.url_name == 'product' %}text-black dark:text-white after:w-full{% else %}text-muted dark:text-gray-400 hover:text-black dark:hover:text-white after:w-0{% endif %} transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:bg-black dark:after:bg-white after:transition-all hover:after:w-full">Product</a>
                 
-                <a href="{% url 'about' %}" class="{% if request.resolver_match.url_name == 'about' %}text-black after:w-full{% else %}text-muted hover:text-black after:w-0{% endif %} transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:bg-black after:transition-all hover:after:w-full">About Us</a>
+                <a href="{% url 'about' %}" class="{% if request.resolver_match.url_name == 'about' %}text-black dark:text-white after:w-full{% else %}text-muted dark:text-gray-400 hover:text-black dark:hover:text-white after:w-0{% endif %} transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:bg-black dark:after:bg-white after:transition-all hover:after:w-full">About Us</a>
                 
-                <a href="{% url 'contact' %}" class="px-5 py-2 {% if request.resolver_match.url_name == 'contact' %}bg-gray-800 text-white{% else %}bg-black text-white hover:bg-gray-800{% endif %} font-semibold rounded transition-colors shadow-sm ml-2">Contact</a>
+                <a href="{% url 'contact' %}" class="px-5 py-2 {% if request.resolver_match.url_name == 'contact' %}bg-gray-800 dark:bg-gray-700 text-white{% else %}bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200{% endif %} font-semibold rounded transition-colors shadow-sm ml-2">Contact</a>
+
+                <!-- Theme Toggle Button -->
+                <button @click="darkMode = !darkMode" class="p-2 ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-500 dark:text-gray-400 focus:outline-none" aria-label="Toggle Dark Mode">
+                    <!-- Sun icon for dark mode -->
+                    <svg x-show="darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display: none;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <!-- Moon icon for light mode -->
+                    <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
             </div>
             
             <!-- Mobile Toggle -->
@@ -172,7 +208,21 @@
                         <a href="{% url 'domain_detail' 'aerosac' %}" class="text-gray-600 hover:text-black">AEROSAC</a>
                     </div>
                 </div>
-                <a href="{% url 'services' %}" class="{% if request.resolver_match.url_name == 'services' or request.resolver_match.url_name == 'service_detail' %}text-black font-semibold border-l-2 border-black pl-2{% else %}text-muted hover:text-black font-medium{% endif %}">Services</a>
+                <div x-data="{ servicesOpen: false }" class="flex flex-col gap-2">
+                    <button @click="servicesOpen = !servicesOpen" class="{% if request.resolver_match.url_name == 'services' or request.resolver_match.url_name == 'service_detail' %}text-black font-semibold border-l-2 border-black pl-2{% else %}text-muted hover:text-black font-medium{% endif %} flex justify-between items-center text-left w-full font-semibold">
+                        Services
+                        <svg class="w-4 h-4 transition-transform duration-200" :class="{'rotate-180': servicesOpen}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div x-show="servicesOpen" class="pl-4 flex flex-col gap-3 py-2 border-l border-gray-150">
+                        <a href="{% url 'service_detail' 'asic-verification' %}" class="text-gray-700 hover:text-black font-medium">IP, Subsystem, SOC Verification</a>
+                        <a href="{% url 'service_detail' 'asic-verification' %}#arm-soc" class="text-gray-900 font-bold pl-2">&bull; ARM SOC Verification</a>
+                        <a href="{% url 'service_detail' 'rtl-design' %}" class="text-gray-600 hover:text-black">RTL Design</a>
+                        <a href="{% url 'service_detail' 'fpga-prototyping' %}" class="text-gray-600 hover:text-black">FPGA Prototyping</a>
+                        <a href="{% url 'service_detail' 'functional-coverage' %}" class="text-gray-600 hover:text-black">Functional Coverage</a>
+                        <a href="{% url 'service_detail' 'uvm-testbench' %}" class="text-gray-600 hover:text-black">UVM Testbench Dev</a>
+                        <a href="{% url 'services' %}" class="text-[#555] hover:text-black text-xs font-mono uppercase">All Services &rarr;</a>
+                    </div>
+                </div>
                 <a href="{% url 'methodology' %}" class="{% if request.resolver_match.url_name == 'methodology' %}text-black font-semibold border-l-2 border-black pl-2{% else %}text-muted hover:text-black font-medium{% endif %}">Methodology</a>
                 <a href="{% url 'product' %}" class="{% if request.resolver_match.url_name == 'product' %}text-black font-semibold border-l-2 border-black pl-2{% else %}text-muted hover:text-black font-medium{% endif %}">Product</a>
                 <a href="{% url 'about' %}" class="{% if request.resolver_match.url_name == 'about' %}text-black font-semibold border-l-2 border-black pl-2{% else %}text-muted hover:text-black font-medium{% endif %}">About Us</a>
@@ -187,60 +237,57 @@
     </main>
 
     <!-- Professional Footer -->
-    <footer class="border-t border-[#eaeaea] mt-24 bg-[#f8f9fa] pt-16 pb-8">
+    <footer class="border-t border-[#eaeaea] dark:border-white/10 mt-24 bg-[#f8f9fa] dark:bg-[#050505] pt-16 pb-8 transition-colors duration-300">
         <div class="container mx-auto px-6 max-w-7xl">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
                 
                 <div class="col-span-1 md:col-span-1">
-                    <div class="flex items-center gap-3 mb-6 text-black">
-                        <svg width="24" height="24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="25" y="25" width="50" height="50" rx="6" stroke="currentColor" stroke-width="6"/>
-                            <path d="M25 40h-8 M25 50h-8 M25 60h-8 M75 40h8 M75 50h8 M75 60h8 M40 25v-8 M50 25v-8 M60 25v-8 M40 75v8 M50 75v8 M60 75v8" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
-                        </svg>
+                    <div class="flex items-center gap-3 mb-6 text-black dark:text-white">
+                        <img src="{% static 'images/logo.png' %}" alt="Neurotech Logo" class="h-10 w-auto dark:invert transition-all duration-300">
                         <span class="font-sans font-semibold tracking-wide text-lg">Neurotech Circuit Pvt Ltd</span>
                     </div>
-                    <p class="text-muted text-sm leading-relaxed mb-6">
+                    <p class="text-muted dark:text-gray-400 text-sm leading-relaxed mb-6">
                         Enterprise-grade semiconductor design verification. We ensure flawless silicon tape-outs for the world's most complex architectures.
                     </p>
                 </div>
                 
                 <div>
-                    <h4 class="text-black font-semibold mb-6">Services</h4>
-                    <ul class="space-y-4 text-sm text-muted">
-                        <li><a href="{% url 'service_detail' 'asic-verification' %}" class="hover:text-black transition-colors font-medium">Design Verification</a></li>
-                        <li><a href="{% url 'service_detail' 'rtl-design' %}" class="hover:text-black transition-colors font-medium">RTL Design</a></li>
-                        <li><a href="{% url 'service_detail' 'fpga-prototyping' %}" class="hover:text-black transition-colors font-medium">FPGA Prototyping</a></li>
-                        <li><a href="{% url 'service_detail' 'uvm-testbench' %}" class="hover:text-black transition-colors font-medium">UVM Testbenches</a></li>
+                    <h4 class="text-black dark:text-white font-semibold mb-6">Services</h4>
+                    <ul class="space-y-4 text-sm text-muted dark:text-gray-400">
+                        <li><a href="{% url 'service_detail' 'asic-verification' %}" class="hover:text-black dark:hover:text-white transition-colors font-medium">IP, Subsystem, SOC Verification</a></li>
+                        <li><a href="{% url 'service_detail' 'rtl-design' %}" class="hover:text-black dark:hover:text-white transition-colors font-medium">RTL Design</a></li>
+                        <li><a href="{% url 'service_detail' 'fpga-prototyping' %}" class="hover:text-black dark:hover:text-white transition-colors font-medium">FPGA Prototyping</a></li>
+                        <li><a href="{% url 'service_detail' 'uvm-testbench' %}" class="hover:text-black dark:hover:text-white transition-colors font-medium">UVM Testbenches</a></li>
                     </ul>
                 </div>
                 
                 <div>
-                    <h4 class="text-black font-semibold mb-6">Company</h4>
-                    <ul class="space-y-4 text-sm text-muted">
-                        <li><a href="{% url 'about' %}" class="hover:text-black transition-colors font-medium">About Us</a></li>
-                        <li><a href="{% url 'methodology' %}" class="hover:text-black transition-colors font-medium">Methodology</a></li>
-                        <li><a href="{% url 'contact' %}" class="hover:text-black transition-colors font-medium">Careers</a></li>
-                        <li><a href="{% url 'contact' %}" class="hover:text-black transition-colors font-medium">Contact</a></li>
+                    <h4 class="text-black dark:text-white font-semibold mb-6">Company</h4>
+                    <ul class="space-y-4 text-sm text-muted dark:text-gray-400">
+                        <li><a href="{% url 'about' %}" class="hover:text-black dark:hover:text-white transition-colors font-medium">About Us</a></li>
+                        <li><a href="{% url 'methodology' %}" class="hover:text-black dark:hover:text-white transition-colors font-medium">Methodology</a></li>
+                        <li><a href="{% url 'contact' %}" class="hover:text-black dark:hover:text-white transition-colors font-medium">Careers</a></li>
+                        <li><a href="{% url 'contact' %}" class="hover:text-black dark:hover:text-white transition-colors font-medium">Contact</a></li>
                     </ul>
                 </div>
                 
                 <div>
-                    <h4 class="text-black font-semibold mb-6">Office Address</h4>
-                    <ul class="space-y-3 text-sm text-muted">
+                    <h4 class="text-black dark:text-white font-semibold mb-6">Office Address</h4>
+                    <ul class="space-y-3 text-sm text-muted dark:text-gray-400">
                         <li>5th floor, White House,</li>
                         <li>Tilak Rd, Perugate, Sadashiv Peth,</li>
                         <li>Pune, Maharashtra 411030</li>
-                        <li><a href="mailto:shailesh.vasekar@neurotechc.com" class="text-black font-medium hover:underline mt-4 block">shailesh.vasekar@neurotechc.com</a></li>
+                        <li><a href="mailto:shailesh.vasekar@neurotechc.com" class="text-black dark:text-white font-medium hover:underline mt-4 block">shailesh.vasekar@neurotechc.com</a></li>
                     </ul>
                 </div>
                 
             </div>
             
-            <div class="border-t border-[#eaeaea] pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-muted">
+            <div class="border-t border-[#eaeaea] dark:border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-muted dark:text-gray-500">
                 <div>&copy; {% now "Y" %} Neurotech Circuit Pvt Ltd. All rights reserved.</div>
                 <div class="flex gap-6 mt-4 md:mt-0 font-medium">
-                    <a href="#" class="hover:text-black transition-colors">Privacy Policy</a>
-                    <a href="#" class="hover:text-black transition-colors">Terms of Service</a>
+                    <a href="#" class="hover:text-black dark:hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-black dark:hover:text-white transition-colors">Terms of Service</a>
                 </div>
             </div>
         </div>
