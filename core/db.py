@@ -1,13 +1,23 @@
 import os
 import datetime
-from pymongo import MongoClient
-from pymongo.server_api import ServerApi
+
+try:
+    from pymongo import MongoClient
+    from pymongo.server_api import ServerApi
+    from bson.objectid import ObjectId
+except ImportError:
+    MongoClient = None
+    ServerApi = None
+    ObjectId = None
 
 def get_mongo_client():
     """
     Retrieves the MongoClient configured with the environment-supplied MONGO_URI.
     Falls back to localhost if the variable is not set.
     """
+    if MongoClient is None or ServerApi is None:
+        raise ImportError('pymongo is required for MongoDB-backed appointment actions.')
+
     uri = os.environ.get('MONGO_URI')
     if not uri:
         uri = "mongodb://localhost:27017/"
@@ -27,9 +37,6 @@ def test_mongo_connection():
         return False, str(e)
     finally:
         client.close()
-
-from bson.objectid import ObjectId
-
 def save_appointment_to_mongodb(data):
     """
     Saves the validated appointment form data as a document in the MongoDB database collection.
@@ -76,6 +83,9 @@ def update_appointment(appt_id, status=None, note=None):
     """
     Updates the status or note for a specific appointment document.
     """
+    if ObjectId is None:
+        raise ImportError('pymongo is required for MongoDB-backed appointment actions.')
+
     client = get_mongo_client()
     try:
         db = client.get_database('neurotech')
@@ -96,6 +106,9 @@ def delete_appointment(appt_id):
     """
     Deletes an appointment document from the collection by ID.
     """
+    if ObjectId is None:
+        raise ImportError('pymongo is required for MongoDB-backed appointment actions.')
+
     client = get_mongo_client()
     try:
         db = client.get_database('neurotech')
