@@ -82,13 +82,70 @@ WSGI_APPLICATION = 'neurotechc.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
+DATABASE_URL = os.environ.get('DATABASE_URL')
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+if DATABASE_URL:
+    # Support MongoDB connection strings (e.g. mongodb:// or mongodb+srv://)
+    if DATABASE_URL.startswith('mongodb'):
+        try:
+            # djongo integrates Django ORM with MongoDB. It requires `djongo` and `pymongo`.
+            # Configure using djongo's `CLIENT` style so the raw URI is used.
+            DATABASES = {
+                'default': {
+                    'ENGINE': 'djongo',
+                    'NAME': os.environ.get('MONGO_DB_NAME', 'neurotechc'),
+                    'CLIENT': {
+                        'host': DATABASE_URL,
+                    }
+                }
+            }
+        except Exception:
+            # Fall back to normal parsing behaviour below
+            DATABASES = {
+                'default': {
+                    'ENGINE': 'django.db.backends.sqlite3',
+                    'NAME': BASE_DIR / 'db.sqlite3',
+                }
+            }
+    else:
+        try:
+            import dj_database_url
+
+            DATABASES = {
+                'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600),
+            }
+        except Exception:
+            # If dj_database_url isn't available, fall back to sqlite (will be overridden
+            # in production environments via DATABASE_URL recommended).
+            DATABASES = {
+                'default': {
+                    'ENGINE': 'django.db.backends.sqlite3',
+                    'NAME': BASE_DIR / 'db.sqlite3',
+                }
+            }
+else:
+    # If running with DEBUG=False on a serverless or restricted filesystem (e.g., Vercel),
+    # try to use a writable /tmp path to avoid "unable to open database file" errors.
+    if not DEBUG and os.environ.get('VERCEL') == '1':
+        SQLITE_PATH = os.environ.get('SQLITE_PATH', '/tmp/db.sqlite3')
+        try:
+            os.makedirs(os.path.dirname(SQLITE_PATH), exist_ok=True)
+        except Exception:
+            # ignore directory creation errors; connection attempt will surface any issues
+            pass
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': SQLITE_PATH,
+            }
+        }
+    else:
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }
 
 
 # Password validation
