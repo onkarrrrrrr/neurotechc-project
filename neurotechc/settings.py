@@ -82,32 +82,32 @@ WSGI_APPLICATION = 'neurotechc.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
+MONGO_URI = os.environ.get('MONGO_URI') or os.environ.get('DATABASE_URL')
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
-if DATABASE_URL:
+if MONGO_URI and MONGO_URI.startswith('mongodb'):
     # Support MongoDB connection strings (e.g. mongodb:// or mongodb+srv://)
-    if DATABASE_URL.startswith('mongodb'):
-        try:
-            # djongo integrates Django ORM with MongoDB. It requires `djongo` and `pymongo`.
-            # Configure using djongo's `CLIENT` style so the raw URI is used.
-            DATABASES = {
-                'default': {
-                    'ENGINE': 'djongo',
-                    'NAME': os.environ.get('MONGO_DB_NAME', 'neurotechc'),
-                    'CLIENT': {
-                        'host': DATABASE_URL,
-                    }
+    try:
+        # djongo integrates Django ORM with MongoDB. It requires `djongo` and `pymongo`.
+        # Configure using djongo's `CLIENT` style so the raw URI is used.
+        DATABASES = {
+            'default': {
+                'ENGINE': 'djongo',
+                'NAME': os.environ.get('MONGO_DB_NAME', 'neurotechc'),
+                'CLIENT': {
+                    'host': MONGO_URI,
                 }
             }
-        except Exception:
-            # Fall back to normal parsing behaviour below
-            DATABASES = {
-                'default': {
-                    'ENGINE': 'django.db.backends.sqlite3',
-                    'NAME': BASE_DIR / 'db.sqlite3',
-                }
+        }
+    except Exception:
+        # Fall back to normal parsing behaviour below
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
             }
-    else:
+        }
+elif DATABASE_URL:
         try:
             import dj_database_url
 
