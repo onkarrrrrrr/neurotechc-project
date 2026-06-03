@@ -5,3 +5,5 @@ dnspython==2.6.1
 python-dotenv==1.0.1
 django-cms==5.0.7
 djangocms-text==0.9.8
+dj-database-url==2.1.0
+psycopg2-binary==2.9.9
