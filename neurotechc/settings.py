@@ -32,7 +32,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure--+r0cc*89ie3ij_x+hj-o3p=^a86mx94t8!a@2r650&yu+n(i4')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+IS_VERCEL = os.environ.get('VERCEL') == '1'
+DEBUG = os.environ.get('DEBUG', 'False' if IS_VERCEL else 'True') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
@@ -124,9 +125,9 @@ elif DATABASE_URL:
                 }
             }
 else:
-    # If running with DEBUG=False on a serverless or restricted filesystem (e.g., Vercel),
-    # try to use a writable /tmp path to avoid "unable to open database file" errors.
-    if not DEBUG and os.environ.get('VERCEL') == '1':
+    # If running on Vercel without Mongo configured, fall back to a writable /tmp path
+    # instead of the repository sqlite file, which is not available in the deployment sandbox.
+    if IS_VERCEL:
         SQLITE_PATH = os.environ.get('SQLITE_PATH', '/tmp/db.sqlite3')
         try:
             os.makedirs(os.path.dirname(SQLITE_PATH), exist_ok=True)
