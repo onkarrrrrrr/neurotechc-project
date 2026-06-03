@@ -36,6 +36,17 @@ class AppointmentForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['service'].choices = get_service_choices()
+        field_classes = {
+            'full_name': 'w-full px-4 py-3 rounded border border-[#eaeaea] bg-white text-black focus:outline-none focus:ring-2 focus:ring-black/10',
+            'email': 'w-full px-4 py-3 rounded border border-[#eaeaea] bg-white text-black focus:outline-none focus:ring-2 focus:ring-black/10',
+            'phone': 'w-full px-4 py-3 rounded border border-[#eaeaea] bg-white text-black focus:outline-none focus:ring-2 focus:ring-black/10',
+            'company': 'w-full px-4 py-3 rounded border border-[#eaeaea] bg-white text-black focus:outline-none focus:ring-2 focus:ring-black/10',
+            'service': 'w-full px-4 py-3 rounded border border-[#eaeaea] bg-white text-black focus:outline-none focus:ring-2 focus:ring-black/10',
+            'message': 'w-full px-4 py-3 rounded border border-[#eaeaea] bg-white text-black focus:outline-none focus:ring-2 focus:ring-black/10 min-h-40',
+        }
+
+        for field_name, class_name in field_classes.items():
+            self.fields[field_name].widget.attrs['class'] = class_name
 
 
 class ServiceForm(forms.ModelForm):

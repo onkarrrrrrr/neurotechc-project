@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load cms_tags %}
+
+{% block content %}
+<section class="py-24 bg-white dark:bg-[#0a0a0a] transition-colors duration-300">
+    <div class="container mx-auto px-6 max-w-5xl">
+        <div class="rounded-3xl border border-[#eaeaea] dark:border-white/10 bg-white dark:bg-white/5 p-8 md:p-12 shadow-sm">
+            {% placeholder 'content' %}
+        </div>
+    </div>
+</section>
+{% endblock %}

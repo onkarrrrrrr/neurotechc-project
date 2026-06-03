@@ -1,4 +1,4 @@
-{% load static %}
+{% load static cms_tags sekizai_tags %}
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth" x-data="{ darkMode: localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches) }" :class="{ 'dark': darkMode }" x-init="$watch('darkMode', val => localStorage.setItem('theme', val ? 'dark' : 'light'))">
 <head>
@@ -51,6 +51,8 @@
         }
     </script>
 
+    {% render_block "css" %}
+
     <style>
         body {
             background-color: #ffffff;
@@ -99,6 +101,7 @@
     </style>
 </head>
 <body class="font-sans antialiased min-h-screen flex flex-col relative overflow-x-hidden selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black transition-colors duration-300 dark:bg-[#0a0a0a] dark:text-gray-200">
+    {% cms_toolbar %}
 
     <!-- Header -->
     <nav x-data="{ scrolled: false, mobileMenuOpen: false }" 
@@ -108,14 +111,14 @@
         <div class="container mx-auto px-6 max-w-7xl flex items-center justify-between">
             
             <!-- Logo -->
-            <a href="{% url 'home' %}" class="flex items-center group">
+            <a href="/" class="flex items-center group">
                 <!-- White logo for dark mode, black for light mode -->
                 <img src="{% static 'images/logo.png' %}" alt="Neurotech Logo" class="h-14 w-auto dark:invert transition-all duration-300">
             </a>
             
             <!-- Desktop Menu -->
             <div class="hidden md:flex items-center gap-8 font-sans text-sm font-medium">
-                <a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}text-black dark:text-white after:w-full{% else %}text-muted dark:text-gray-400 hover:text-black dark:hover:text-white after:w-0{% endif %} transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:bg-black dark:after:bg-white after:transition-all hover:after:w-full">Home</a>
+                <a href="/" class="{% if request.resolver_match.url_name == 'home' %}text-black dark:text-white after:w-full{% else %}text-muted dark:text-gray-400 hover:text-black dark:hover:text-white after:w-0{% endif %} transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:bg-black dark:after:bg-white after:transition-all hover:after:w-full">Home</a>
                 
                 <!-- Domain Dropdown -->
                 <div x-data="{ open: false }" class="relative" @mouseenter="open = true" @mouseleave="open = false">
@@ -164,18 +167,18 @@
                             <a href="{% url 'service_detail' 'functional-coverage' %}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white font-normal">Functional Coverage</a>
                             <a href="{% url 'service_detail' 'uvm-testbench' %}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white">UVM Testbench Dev</a>
                             <div class="border-t border-[#eaeaea] dark:border-gray-700 my-1"></div>
-                            <a href="{% url 'services' %}" class="block px-4 py-2 text-xs text-[#888] dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white font-mono uppercase tracking-wider font-semibold">All Services &rarr;</a>
+                            <a href="/services/" class="block px-4 py-2 text-xs text-[#888] dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-black dark:hover:text-white font-mono uppercase tracking-wider font-semibold">All Services &rarr;</a>
                         </div>
                     </div>
                 </div>
                 
-                <a href="{% url 'methodology' %}" class="{% if request.resolver_match.url_name == 'methodology' %}text-black dark:text-white after:w-full{% else %}text-muted dark:text-gray-400 hover:text-black dark:hover:text-white after:w-0{% endif %} transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:bg-black dark:after:bg-white after:transition-all hover:after:w-full">Methodology</a>
+                <a href="/methodology/" class="{% if request.resolver_match.url_name == 'methodology' %}text-black dark:text-white after:w-full{% else %}text-muted dark:text-gray-400 hover:text-black dark:hover:text-white after:w-0{% endif %} transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:bg-black dark:after:bg-white after:transition-all hover:after:w-full">Methodology</a>
                 
-                <a href="{% url 'product' %}" class="{% if request.resolver_match.url_name == 'product' %}text-black dark:text-white after:w-full{% else %}text-muted dark:text-gray-400 hover:text-black dark:hover:text-white after:w-0{% endif %} transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:bg-black dark:after:bg-white after:transition-all hover:after:w-full">Product</a>
+                <a href="/product/" class="{% if request.resolver_match.url_name == 'product' %}text-black dark:text-white after:w-full{% else %}text-muted dark:text-gray-400 hover:text-black dark:hover:text-white after:w-0{% endif %} transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:bg-black dark:after:bg-white after:transition-all hover:after:w-full">Product</a>
                 
-                <a href="{% url 'about' %}" class="{% if request.resolver_match.url_name == 'about' %}text-black dark:text-white after:w-full{% else %}text-muted dark:text-gray-400 hover:text-black dark:hover:text-white after:w-0{% endif %} transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:bg-black dark:after:bg-white after:transition-all hover:after:w-full">About Us</a>
+                <a href="/about/" class="{% if request.resolver_match.url_name == 'about' %}text-black dark:text-white after:w-full{% else %}text-muted dark:text-gray-400 hover:text-black dark:hover:text-white after:w-0{% endif %} transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-px after:bg-black dark:after:bg-white after:transition-all hover:after:w-full">About Us</a>
                 
-                <a href="{% url 'contact' %}" class="px-5 py-2 {% if request.resolver_match.url_name == 'contact' %}bg-gray-800 dark:bg-gray-700 text-white{% else %}bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200{% endif %} font-semibold rounded transition-colors shadow-sm ml-2">Contact</a>
+                <a href="/contact/" class="px-5 py-2 {% if request.resolver_match.url_name == 'contact' %}bg-gray-800 dark:bg-gray-700 text-white{% else %}bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200{% endif %} font-semibold rounded transition-colors shadow-sm ml-2">Contact</a>
 
                 <!-- Theme Toggle Button -->
                 <button @click="darkMode = !darkMode" class="p-2 ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-500 dark:text-gray-400 focus:outline-none" aria-label="Toggle Dark Mode">
@@ -195,7 +198,7 @@
         <!-- Mobile Menu -->
         <div x-show="mobileMenuOpen" x-transition class="md:hidden bg-white border-b border-[#eaeaea] absolute w-full left-0 top-full shadow-lg" style="display: none;">
             <div class="container mx-auto px-6 py-6 flex flex-col gap-4 font-sans text-sm">
-                <a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}text-black font-semibold border-l-2 border-black pl-2{% else %}text-muted hover:text-black font-medium{% endif %}">Home</a>
+                <a href="/" class="{% if request.resolver_match.url_name == 'home' %}text-black font-semibold border-l-2 border-black pl-2{% else %}text-muted hover:text-black font-medium{% endif %}">Home</a>
                 <div x-data="{ domainOpen: false }" class="flex flex-col gap-2">
                     <button @click="domainOpen = !domainOpen" class="{% if request.resolver_match.url_name == 'domain_detail' %}text-black font-semibold border-l-2 border-black pl-2{% else %}text-muted hover:text-black font-medium{% endif %} flex justify-between items-center text-left w-full">
                         Domain
@@ -220,13 +223,13 @@
                         <a href="{% url 'service_detail' 'fpga-prototyping' %}" class="text-gray-600 hover:text-black">FPGA Prototyping</a>
                         <a href="{% url 'service_detail' 'functional-coverage' %}" class="text-gray-600 hover:text-black">Functional Coverage</a>
                         <a href="{% url 'service_detail' 'uvm-testbench' %}" class="text-gray-600 hover:text-black">UVM Testbench Dev</a>
-                        <a href="{% url 'services' %}" class="text-[#555] hover:text-black text-xs font-mono uppercase">All Services &rarr;</a>
+                        <a href="/services/" class="text-[#555] hover:text-black text-xs font-mono uppercase">All Services &rarr;</a>
                     </div>
                 </div>
-                <a href="{% url 'methodology' %}" class="{% if request.resolver_match.url_name == 'methodology' %}text-black font-semibold border-l-2 border-black pl-2{% else %}text-muted hover:text-black font-medium{% endif %}">Methodology</a>
-                <a href="{% url 'product' %}" class="{% if request.resolver_match.url_name == 'product' %}text-black font-semibold border-l-2 border-black pl-2{% else %}text-muted hover:text-black font-medium{% endif %}">Product</a>
-                <a href="{% url 'about' %}" class="{% if request.resolver_match.url_name == 'about' %}text-black font-semibold border-l-2 border-black pl-2{% else %}text-muted hover:text-black font-medium{% endif %}">About Us</a>
-                <a href="{% url 'contact' %}" class="{% if request.resolver_match.url_name == 'contact' %}text-black font-bold border-l-2 border-black pl-2{% else %}text-black font-semibold{% endif %} mt-2">Contact &rarr;</a>
+                <a href="/methodology/" class="{% if request.resolver_match.url_name == 'methodology' %}text-black font-semibold border-l-2 border-black pl-2{% else %}text-muted hover:text-black font-medium{% endif %}">Methodology</a>
+                <a href="/product/" class="{% if request.resolver_match.url_name == 'product' %}text-black font-semibold border-l-2 border-black pl-2{% else %}text-muted hover:text-black font-medium{% endif %}">Product</a>
+                <a href="/about/" class="{% if request.resolver_match.url_name == 'about' %}text-black font-semibold border-l-2 border-black pl-2{% else %}text-muted hover:text-black font-medium{% endif %}">About Us</a>
+                <a href="/contact/" class="{% if request.resolver_match.url_name == 'contact' %}text-black font-bold border-l-2 border-black pl-2{% else %}text-black font-semibold{% endif %} mt-2">Contact &rarr;</a>
             </div>
         </div>
     </nav>
@@ -264,10 +267,10 @@
                 <div>
                     <h4 class="text-black dark:text-white font-semibold mb-6">Company</h4>
                     <ul class="space-y-4 text-sm text-muted dark:text-gray-400">
-                        <li><a href="{% url 'about' %}" class="hover:text-black dark:hover:text-white transition-colors font-medium">About Us</a></li>
-                        <li><a href="{% url 'methodology' %}" class="hover:text-black dark:hover:text-white transition-colors font-medium">Methodology</a></li>
-                        <li><a href="{% url 'contact' %}" class="hover:text-black dark:hover:text-white transition-colors font-medium">Careers</a></li>
-                        <li><a href="{% url 'contact' %}" class="hover:text-black dark:hover:text-white transition-colors font-medium">Contact</a></li>
+                        <li><a href="/about/" class="hover:text-black dark:hover:text-white transition-colors font-medium">About Us</a></li>
+                        <li><a href="/methodology/" class="hover:text-black dark:hover:text-white transition-colors font-medium">Methodology</a></li>
+                        <li><a href="/contact/" class="hover:text-black dark:hover:text-white transition-colors font-medium">Careers</a></li>
+                        <li><a href="/contact/" class="hover:text-black dark:hover:text-white transition-colors font-medium">Contact</a></li>
                     </ul>
                 </div>
                 
@@ -292,6 +295,8 @@
             </div>
         </div>
     </footer>
+
+    {% render_block "js" %}
 
 </body>
 </html>

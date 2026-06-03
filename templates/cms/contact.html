@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load cms_tags site_extras %}
+
+{% block content %}
+<section class="py-24 bg-white dark:bg-[#0a0a0a] transition-colors duration-300">
+    <div class="container mx-auto px-6 max-w-7xl">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+            <div>
+                <div class="inline-block px-3 py-1 mb-4 border border-[#eaeaea] dark:border-white/10 rounded text-xs font-mono font-medium text-black dark:text-gray-200 uppercase tracking-widest bg-gray-50 dark:bg-white/5 shadow-sm">Contact</div>
+                <div class="prose prose-lg max-w-none dark:prose-invert mb-8">
+                    {% placeholder 'contact_intro' %}
+                </div>
+                <div class="rounded-3xl border border-[#eaeaea] dark:border-white/10 bg-[#fafafa] dark:bg-white/5 p-8">
+                    <div class="space-y-3 text-sm text-[#555] dark:text-gray-300">
+                        <p><strong>Email:</strong> shailesh.vasekar@neurotechc.com</p>
+                        <p><strong>Phone:</strong> +91 9881409591</p>
+                    </div>
+                </div>
+            </div>
+                <div class="rounded-3xl border border-[#eaeaea] dark:border-white/10 bg-white dark:bg-white/5 p-8 md:p-10 shadow-sm">
+                <h2 class="text-3xl font-heading font-bold mb-6 text-black dark:text-white">Send a request</h2>
+                {% appointment_form %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

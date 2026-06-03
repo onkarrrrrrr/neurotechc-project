@@ -1,0 +1,16 @@
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+    {% for service in services %}
+        <a href="/service/{{ service.slug }}/" class="premium-card p-8 rounded-2xl group block border border-[#eaeaea] hover:border-gray-300 transition-all duration-300 bg-white dark:bg-white/5 dark:border-white/10" data-aos="fade-up">
+            <div class="text-xs font-mono uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400 mb-4">{{ service.badge|default:'Service' }}</div>
+            <div class="flex items-start justify-between gap-4 mb-4">
+                <h3 class="text-2xl font-heading font-bold text-black dark:text-white group-hover:translate-x-1 transition-transform">{{ service.title }}</h3>
+                <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-black text-white dark:bg-white dark:text-black">&rarr;</span>
+            </div>
+            <p class="text-[#555] dark:text-gray-400 leading-relaxed">{{ service.summary }}</p>
+        </a>
+    {% empty %}
+        <div class="col-span-full rounded-2xl border border-dashed border-gray-300 p-8 text-gray-500">
+            Add services in the admin dashboard to populate this section.
+        </div>
+    {% endfor %}
+</div>

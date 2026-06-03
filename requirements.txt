@@ -3,4 +3,5 @@ whitenoise==6.7.0
 pymongo==4.8.0
 dnspython==2.6.1
 python-dotenv==1.0.1
-djongo==1.3.7
+django-cms==5.0.7
+djangocms-text==0.9.8

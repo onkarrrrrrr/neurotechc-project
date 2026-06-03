@@ -39,13 +39,6 @@ def get_service_label(value):
 
     return LEGACY_SERVICE_LABELS.get(value, value)
 
-def home(request):
-    return render(request, 'home.html')
-
-def services(request):
-    services = Service.objects.filter(is_active=True).order_by('sort_order', 'title')
-    return render(request, 'services.html', {'services': services})
-
 def service_detail(request, service_slug):
     service = Service.objects.filter(slug=service_slug, is_active=True).first()
     return render(request, 'service_detail.html', {'service': service, 'slug': service_slug})
@@ -53,29 +46,20 @@ def service_detail(request, service_slug):
 def domain_detail(request, domain_slug):
     return render(request, 'domain_detail.html', {'slug': domain_slug})
 
-def product(request):
-    return render(request, 'product.html')
-
-def methodology(request):
-    return render(request, 'methodology.html')
-
-def about(request):
-    return render(request, 'about.html')
-
-def contact(request):
+def contact_submit(request):
     if request.method == 'POST':
         form = AppointmentForm(request.POST)
         if form.is_valid():
             try:
                 save_appointment_to_mongodb(form.cleaned_data)
                 messages.success(request, 'Your appointment request has been submitted successfully. We will contact you soon.')
-                return redirect('contact')
+                return redirect('/contact/')
             except Exception as e:
                 messages.error(request, f'Database Error: Could not save your submission. Details: {e}')
-    else:
-        form = AppointmentForm()
-    
-    return render(request, 'contact.html', {'form': form})
+        else:
+            messages.error(request, 'Please correct the form errors and try again.')
+
+    return redirect('/contact/')
 
 @staff_member_required(login_url='admin_login')
 def admin_dashboard(request):

@@ -6,7 +6,7 @@
 
     <div class="container mx-auto px-6 max-w-7xl relative z-10">
         <div class="mb-12">
-            <a href="{% url 'services' %}" class="inline-flex items-center text-[#555] hover:text-black font-mono text-sm uppercase tracking-wider transition-colors">
+            <a href="/services/" class="inline-flex items-center text-[#555] hover:text-black font-mono text-sm uppercase tracking-wider transition-colors">
                 &larr; Back to Services
             </a>
         </div>
@@ -42,7 +42,7 @@
                     <div class="premium-card p-8 rounded-lg sticky top-32 bg-[#fafafa] border border-[#eaeaea]">
                         <h3 class="text-xl font-heading font-bold mb-4 text-black">Need help with {{ service.title }}?</h3>
                         <p class="text-[#555] text-sm mb-8 leading-relaxed">Discuss the scope, timeline, and deliverables with our team.</p>
-                        <a href="{% if service.cta_url %}{{ service.cta_url }}{% else %}{% url 'contact' %}?service={{ service.slug }}{% endif %}" class="block w-full py-3 text-center bg-black text-white font-semibold rounded hover:bg-gray-800 transition-colors shadow-sm">{{ service.cta_label|default:'Request Consultation' }}</a>
+                        <a href="{% if service.cta_url %}{{ service.cta_url }}{% else %}/contact/?service={{ service.slug }}{% endif %}" class="block w-full py-3 text-center bg-black text-white font-semibold rounded hover:bg-gray-800 transition-colors shadow-sm">{{ service.cta_label|default:'Request Consultation' }}</a>
                     </div>
                 </div>
             </div>
@@ -50,7 +50,7 @@
             <div class="text-center py-20">
                 <h1 class="text-4xl font-heading font-bold mb-4 text-black">Service Not Found</h1>
                 <p class="text-[#555]">The requested service could not be located.</p>
-                <a href="{% url 'services' %}" class="inline-block mt-8 px-6 py-2 bg-black text-white rounded">View All Services</a>
+                <a href="/services/" class="inline-block mt-8 px-6 py-2 bg-black text-white rounded">View All Services</a>
             </div>
         {% endif %}
     </div>

@@ -47,6 +47,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'treebeard',
+    'menus',
+    'sekizai',
+    'cms',
+    'djangocms_text',
     'core',
 ]
 
@@ -57,6 +63,10 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'cms.middleware.user.CurrentUserMiddleware',
+    'cms.middleware.page.CurrentPageMiddleware',
+    'cms.middleware.toolbar.ToolbarMiddleware',
+    'cms.middleware.language.LanguageCookieMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -73,6 +83,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'sekizai.context_processors.sekizai',
+                'cms.context_processors.cms_settings',
             ],
         },
     },
@@ -83,32 +95,10 @@ WSGI_APPLICATION = 'neurotechc.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-MONGO_URI = os.environ.get('MONGO_URI') or os.environ.get('DATABASE_URL')
 DATABASE_URL = os.environ.get('DATABASE_URL')
+SQLITE_PATH = os.environ.get('SQLITE_PATH')
 
-if MONGO_URI and MONGO_URI.startswith('mongodb'):
-    # Support MongoDB connection strings (e.g. mongodb:// or mongodb+srv://)
-    try:
-        # djongo integrates Django ORM with MongoDB. It requires `djongo` and `pymongo`.
-        # Configure using djongo's `CLIENT` style so the raw URI is used.
-        DATABASES = {
-            'default': {
-                'ENGINE': 'djongo',
-                'NAME': os.environ.get('MONGO_DB_NAME', 'neurotechc'),
-                'CLIENT': {
-                    'host': MONGO_URI,
-                }
-            }
-        }
-    except Exception:
-        # Fall back to normal parsing behaviour below
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': BASE_DIR / 'db.sqlite3',
-            }
-        }
-elif DATABASE_URL:
+if DATABASE_URL:
         try:
             import dj_database_url
 
@@ -125,10 +115,8 @@ elif DATABASE_URL:
                 }
             }
 else:
-    # If running on Vercel without Mongo configured, fall back to a writable /tmp path
-    # instead of the repository sqlite file, which is not available in the deployment sandbox.
-    if IS_VERCEL:
-        SQLITE_PATH = os.environ.get('SQLITE_PATH', '/tmp/db.sqlite3')
+    # Prefer a persistent sqlite file when SQLITE_PATH is explicitly configured.
+    if SQLITE_PATH:
         try:
             os.makedirs(os.path.dirname(SQLITE_PATH), exist_ok=True)
         except Exception:
@@ -138,6 +126,21 @@ else:
             'default': {
                 'ENGINE': 'django.db.backends.sqlite3',
                 'NAME': SQLITE_PATH,
+            }
+        }
+    # If running on Vercel without a persistent path, fall back to a writable /tmp path
+    # instead of the repository sqlite file, which is not available in the deployment sandbox.
+    elif IS_VERCEL:
+        fallback_sqlite_path = '/tmp/db.sqlite3'
+        try:
+            os.makedirs(os.path.dirname(fallback_sqlite_path), exist_ok=True)
+        except Exception:
+            # ignore directory creation errors; connection attempt will surface any issues
+            pass
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': fallback_sqlite_path,
             }
         }
     else:
@@ -171,7 +174,26 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
+
+LANGUAGES = [
+    ('en', 'English'),
+]
+
+CMS_LANGUAGES = {
+    1: [
+        {
+            'code': 'en',
+            'name': 'English',
+            'public': True,
+        },
+    ],
+    'default': {
+        'fallbacks': ['en'],
+        'redirect_on_fallback': True,
+        'public': True,
+    }
+}
 
 TIME_ZONE = 'UTC'
 
@@ -187,6 +209,47 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+SITE_ID = 1
+
+CMS_TEMPLATES = (
+    ('cms/home.html', 'Home Page'),
+    ('cms/page.html', 'Standard Page'),
+    ('cms/services.html', 'Services Page'),
+    ('cms/contact.html', 'Contact Page'),
+)
+
+CMS_CONFIRM_VERSION4 = True
+
+
+CMS_PLACEHOLDER_CONF = {
+    'hero': {
+        'name': 'Hero',
+        'plugins': ['TextPlugin'],
+    },
+    'content': {
+        'name': 'Content',
+        'plugins': ['TextPlugin'],
+        'default_plugins': [
+            {
+                'plugin_type': 'TextPlugin',
+                'values': {
+                    'body': '<p>Start editing this page from the CMS toolbar.</p>',
+                },
+            },
+        ],
+    },
+    'services_intro': {
+        'name': 'Services Intro',
+        'plugins': ['TextPlugin'],
+    },
+    'contact_intro': {
+        'name': 'Contact Intro',
+        'plugins': ['TextPlugin'],
+    },
+}
+
+TEXT_INLINE_EDITING = True
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/6.0/ref/settings/#default-auto-field

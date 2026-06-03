@@ -9,5 +9,8 @@ pip install -r requirements.txt
 echo "Running migrations..."
 python manage.py migrate --noinput
 
+echo "Bootstrapping CMS pages..."
+python manage.py bootstrap_cms --noinput
+
 echo "Collecting static files..."
 python manage.py collectstatic --noinput
