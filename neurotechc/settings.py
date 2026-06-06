@@ -81,7 +81,8 @@ WSGI_APPLICATION = 'neurotechc.wsgi.application'
 
 if os.environ.get('VERCEL') == '1' or os.environ.get('VERCEL'):
     tmp_db_path = '/tmp/db.sqlite3'
-    if not os.path.exists(tmp_db_path):
+    # Copy if it doesn't exist, or if it is an empty/corrupted sqlite file (less than 10KB)
+    if not os.path.exists(tmp_db_path) or os.path.getsize(tmp_db_path) < 10000:
         source_db = BASE_DIR / 'db.sqlite3'
         if source_db.exists():
             shutil.copy2(source_db, tmp_db_path)
