@@ -29,6 +29,11 @@
         43% { opacity: 0; transform: scale(1); }
         100% { opacity: 0; }
     }
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-25px); }
+        100% { transform: translateY(0px); }
+    }
 </style>
 
 <section class="relative min-h-[90vh] flex items-center overflow-hidden">
@@ -51,8 +56,8 @@
                     Neurotech Circuits & Team
                 </div>
                 <h1 class="text-6xl md:text-7xl lg:text-8xl font-heading font-bold mb-6 leading-[1.1] tracking-tight">
-                    ARM SoC Expert<br/>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Verification.</span>
+                    Proven Trust &<br/>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Track Record.</span>
                 </h1>
                 <p class="text-xl text-gray-300 mb-6 max-w-2xl font-sans font-light leading-relaxed">
                     Delivering quick testbench bring-up environments and flows. Specialized in Cortex-R & Cortex-A verification for zero-defect silicon.
@@ -69,6 +74,39 @@
                     </a>
                 </div>
             </div>
+            
+            <!-- Video Column -->
+            <div class="hidden lg:flex justify-center items-center relative" data-aos="fade-left" data-aos-duration="1500">
+                <!-- Glowing backdrop for aesthetics -->
+                <div class="absolute w-72 h-72 bg-blue-500/20 rounded-full blur-[80px]"></div>
+                
+                <div class="relative z-10 w-96 h-96 rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black/50 backdrop-blur-sm">
+                    <video 
+                        id="heroLogoVideo"
+                        src="{% static 'images/logo.mp4' %}" 
+                        class="w-full h-full object-cover" 
+                        autoplay 
+                        muted 
+                        playsinline>
+                    </video>
+                </div>
+            </div>
+            
+            <!-- Video Pause Logic -->
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const video = document.getElementById('heroLogoVideo');
+                    if (video) {
+                        video.addEventListener('timeupdate', () => {
+                            // Pause precisely at 9 seconds
+                            if (video.currentTime >= 9) {
+                                video.pause();
+                            }
+                        });
+                    }
+                });
+            </script>
+
         </div>
     </div>
 </section>
@@ -225,6 +263,7 @@
                     </ul>
                 </div>
             </div>
+            
         </div>
     </div>
 </section>
